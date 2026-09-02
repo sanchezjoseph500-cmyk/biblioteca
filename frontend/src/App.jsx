@@ -35,6 +35,10 @@ import {
   BellRing,
   BadgeCheck,
   Hourglass,
+  Pencil,
+  Menu,
+  TrendingUp,
+  Filter,
 } from "lucide-react";
 import {
   getUsuarios,
@@ -55,6 +59,8 @@ import {
   aprobarPrestamo,
   notificarTardio,
   deletePrestamo,
+  logout,
+  getPerfil,
 } from "./services/api";
 import Login from "./pages/Login";
 
@@ -161,15 +167,6 @@ function FloatingBooksSVG({ className }) {
   );
 }
 
-function QuoteDecor({ className }) {
-  return (
-    <svg className={className} viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M8 30C8 20 14 12 24 8L26 12C18 15 15 20 14 25H22V42H8V30Z" fill="#d4a017" opacity="0.3" />
-      <path d="M32 30C32 20 38 12 48 8L50 12C42 15 39 20 38 25H46V42H32V30Z" fill="#d4a017" opacity="0.25" />
-    </svg>
-  );
-}
-
 function PatternBg() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -264,23 +261,25 @@ function ConfirmDialog({ isOpen, onClose, onConfirm, title, message, icon: Icon 
   if (!visible) return null;
 
   return (
-    <div className={`fixed inset-0 z-[60] flex items-center justify-center transition-all duration-300 ${animating ? "opacity-100" : "opacity-0"}`}>
+    <div className={`fixed inset-0 z-[60] overflow-y-auto transition-all duration-300 ${animating ? "opacity-100" : "opacity-0"}`}>
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className={`relative bg-gradient-to-b from-[#faf8f0] to-[#f5f0e4] rounded-2xl border border-[#d4c9a8] shadow-2xl w-full max-w-sm mx-4 transition-all duration-300 overflow-hidden ${animating ? "scale-100 translate-y-0" : "scale-90 translate-y-6"}`}>
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 to-red-600" />
-        <div className="px-6 py-6 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-100 to-red-100 flex items-center justify-center mx-auto mb-4 shadow-inner">
-            {Icon ? <Icon size={28} className="text-rose-600" /> : <ShieldAlert size={28} className="text-rose-600" />}
-          </div>
-          <h3 className="font-serif text-lg text-[#1a2520] mb-2">{title}</h3>
-          <p className="text-sm text-[#6f6a55] mb-6">{message}</p>
-          <div className="flex justify-center gap-3">
-            <button onClick={onClose} className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-[#e8e0cc] text-[#4a4738] hover:bg-[#ddd5be] transition-all duration-200 cursor-pointer">
-              Cancelar
-            </button>
-            <button onClick={() => { onConfirm(); onClose(); }} className="px-5 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-rose-700 to-red-700 text-white hover:from-rose-600 hover:to-red-600 shadow-lg shadow-rose-500/20 transition-all duration-200 cursor-pointer">
-              Confirmar
-            </button>
+      <div className="relative min-h-full flex items-center justify-center p-4 pointer-events-none">
+        <div className={`relative bg-gradient-to-b from-[#faf8f0] to-[#f5f0e4] rounded-2xl border border-[#d4c9a8] shadow-2xl w-full max-w-sm transition-all duration-300 overflow-hidden pointer-events-auto ${animating ? "scale-100 translate-y-0" : "scale-90 translate-y-6"}`}>
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 to-red-600" />
+          <div className="px-6 py-6 text-center">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-100 to-red-100 flex items-center justify-center mx-auto mb-4 shadow-inner">
+              {Icon ? <Icon size={28} className="text-rose-600" /> : <ShieldAlert size={28} className="text-rose-600" />}
+            </div>
+            <h3 className="font-serif text-lg text-[#1a2520] mb-2">{title}</h3>
+            <p className="text-sm text-[#6f6a55] mb-6">{message}</p>
+            <div className="flex justify-center gap-3">
+              <button onClick={onClose} className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-[#e8e0cc] text-[#4a4738] hover:bg-[#ddd5be] transition-all duration-200 cursor-pointer">
+                Cancelar
+              </button>
+              <button onClick={() => { onConfirm(); onClose(); }} className="px-5 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-rose-700 to-red-700 text-white hover:from-rose-600 hover:to-red-600 shadow-lg shadow-rose-500/20 transition-all duration-200 cursor-pointer">
+                Confirmar
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -307,26 +306,28 @@ function Modal({ isOpen, onClose, title, icon: Icon, children }) {
   if (!visible) return null;
 
   return (
-    <div className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-300 ${animating ? "opacity-100" : "opacity-0"}`}>
+    <div className={`fixed inset-0 z-50 overflow-y-auto transition-all duration-300 ${animating ? "opacity-100" : "opacity-0"}`}>
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className={`relative bg-gradient-to-b from-[#faf8f0] to-[#f5f0e4] rounded-2xl border border-[#d4c9a8] shadow-2xl w-full max-w-md mx-4 transition-all duration-300 overflow-hidden ${animating ? "scale-100 translate-y-0" : "scale-90 translate-y-6"}`}>
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-emerald-500 to-amber-500" />
-        <div className="relative px-6 py-5 border-b border-[#d4c9a8]/60">
-          <div className="flex items-center gap-3">
-            {Icon && (
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-md">
-                <Icon size={20} className="text-white" />
-              </div>
-            )}
-            <h2 className="font-serif text-xl text-[#1a2520]">{title}</h2>
+      <div className="relative min-h-full flex items-center justify-center p-4 pointer-events-none">
+        <div className={`relative bg-gradient-to-b from-[#faf8f0] to-[#f5f0e4] rounded-2xl border border-[#d4c9a8] shadow-2xl w-full max-w-md transition-all duration-300 overflow-hidden pointer-events-auto ${animating ? "scale-100 translate-y-0" : "scale-90 translate-y-6"}`}>
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-emerald-500 to-amber-500" />
+          <div className="relative px-6 py-5 border-b border-[#d4c9a8]/60">
+            <div className="flex items-center gap-3">
+              {Icon && (
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-md shrink-0">
+                  <Icon size={20} className="text-white" />
+                </div>
+              )}
+              <h2 className="font-serif text-xl text-[#1a2520]">{title}</h2>
+            </div>
+            <button onClick={onClose} className="absolute top-5 right-5 p-1.5 rounded-lg hover:bg-[#d4c9a8]/40 transition-colors text-[#6f6a55] cursor-pointer">
+              <X size={18} />
+            </button>
           </div>
-          <button onClick={onClose} className="absolute top-5 right-5 p-1.5 rounded-lg hover:bg-[#d4c9a8]/40 transition-colors text-[#6f6a55] cursor-pointer">
-            <X size={18} />
-          </button>
-        </div>
-        <div className="px-6 py-5 relative">
-          {children}
-          <PatternBg />
+          <div className="px-6 py-5 relative max-h-[70vh] overflow-y-auto">
+            {children}
+            <PatternBg />
+          </div>
         </div>
       </div>
     </div>
@@ -407,6 +408,8 @@ function RolBadge({ rol }) {
   );
 }
 
+const UserPlus = Plus;
+
 function puede(rol, ...roles) {
   return roles.includes(rol);
 }
@@ -434,16 +437,16 @@ function EstadoBadge({ estado }) {
 
 function SectionHeader({ eyebrow, title, subtitle, action, icon: Icon }) {
   return (
-    <div className="flex items-end justify-between mb-8 pb-5 border-b border-[#d4c9a8]/60 animate-fadeIn">
+    <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 pb-5 border-b border-[#d4c9a8]/60 animate-fadeIn">
       <div className="flex items-center gap-4">
         {Icon && (
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/25">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/25 shrink-0">
             <Icon size={24} className="text-white" />
           </div>
         )}
-        <div>
+        <div className="min-w-0">
           <p className="text-xs uppercase tracking-[0.2em] text-amber-600 mb-1 font-bold">{eyebrow}</p>
-          <h1 className="text-3xl font-serif text-[#1a2520]">{title}</h1>
+          <h1 className="text-xl sm:text-3xl font-serif text-[#1a2520] leading-tight">{title}</h1>
           {subtitle && <p className="text-sm text-[#6f6a55] mt-0.5">{subtitle}</p>}
         </div>
       </div>
@@ -488,29 +491,30 @@ function DonutChart({ segments, size = 180 }) {
   const total = segments.reduce((s, seg) => s + seg.value, 0);
   const radius = 65;
   const circumference = 2 * Math.PI * radius;
-  let accumulated = 0;
+
+  const segmentData = segments.map((seg, i) => {
+    const prevTotal = segments.slice(0, i).reduce((s, s2) => s + s2.value, 0);
+    const pct = total > 0 ? seg.value / total : 0;
+    const dashLen = pct * circumference;
+    const dashOff = circumference - (prevTotal / total) * circumference;
+    return { pct, dashLen, dashOff };
+  });
 
   return (
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        {segments.map((seg, i) => {
-          const pct = total > 0 ? seg.value / total : 0;
-          const dashLen = pct * circumference;
-          const dashOff = circumference - accumulated * circumference;
-          accumulated += pct;
-          return (
-            <circle
-              key={i} cx={size / 2} cy={size / 2} r={radius} fill="none"
-              stroke={seg.color} strokeWidth={22}
-              strokeDasharray={`${dashLen} ${circumference - dashLen}`}
-              strokeDashoffset={dashOff}
-              strokeLinecap="butt"
-              className={`transition-all duration-200 cursor-pointer ${hoveredIdx === i ? "opacity-100" : "opacity-85"}`}
-              onMouseEnter={() => setHoveredIdx(i)}
-              onMouseLeave={() => setHoveredIdx(null)}
-            />
-          );
-        })}
+        {segments.map((seg, i) => (
+          <circle
+            key={i} cx={size / 2} cy={size / 2} r={radius} fill="none"
+            stroke={seg.color} strokeWidth={22}
+            strokeDasharray={`${segmentData[i].dashLen} ${circumference - segmentData[i].dashLen}`}
+            strokeDashoffset={segmentData[i].dashOff}
+            strokeLinecap="butt"
+            className={`transition-all duration-200 cursor-pointer ${hoveredIdx === i ? "opacity-100" : "opacity-85"}`}
+            onMouseEnter={() => setHoveredIdx(i)}
+            onMouseLeave={() => setHoveredIdx(null)}
+          />
+        ))}
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-3xl font-bold text-[#1a2520]">{total}</span>
@@ -522,7 +526,20 @@ function DonutChart({ segments, size = 180 }) {
 
 // ============ INICIO ============
 
-function Inicio({ usuarios, libros, prestamos }) {
+const ES_MONTHS = { ene: 0, feb: 1, mar: 2, abr: 3, may: 4, jun: 5, jul: 6, ago: 7, sep: 8, oct: 9, nov: 10, dic: 11 };
+function parseEsDate(str) {
+  const mt = (str || "").trim().match(/^(\d+)\s+([a-z]{3,4})\s+(\d{4})$/i);
+  if (!mt) return null;
+  const m = ES_MONTHS[mt[2].toLowerCase()];
+  if (m === undefined) return null;
+  const dt = new Date(+mt[3], m, +mt[1]);
+  return isNaN(dt) ? null : dt;
+}
+function monthKey(d) { return d ? `${d.getFullYear()}-${d.getMonth()}` : null; }
+const monthLabel = (d) =>
+  new Date(d.getFullYear(), d.getMonth(), 1).toLocaleDateString("es-ES", { month: "long", year: "numeric" });
+
+function Inicio({ usuarios, libros, prestamos, navigate }) {
   const librosCount = libros.length;
   const usuariosCount = usuarios.length;
   const prestamosCount = prestamos.length;
@@ -547,6 +564,29 @@ function Inicio({ usuarios, libros, prestamos }) {
     { label: "Al día", value: alDia, color: "#16a34a" },
     { label: "Vencidos", value: vencidos, color: "#e11d48" },
   ];
+
+  // ===== MÁS PRESTADOS DEL MES (con búsqueda y filtros) =====
+  const [msSearch, setMsSearch] = useState("");
+  const [msGenero, setMsGenero] = useState("todos");
+  const now = new Date();
+  const currentMonthKey = monthKey(now);
+  const monthPrestamos = prestamos.filter((p) => {
+    const d = parseEsDate(p.prestamo);
+    return d && monthKey(d) === currentMonthKey;
+  });
+  const monthCounts = {};
+  monthPrestamos.forEach((p) => { monthCounts[p.libro] = (monthCounts[p.libro] || 0) + 1; });
+  const generos = [...new Set(libros.map((l) => l.genero).filter(Boolean))].sort();
+  const q = msSearch.trim().toLowerCase();
+  const filteredMonthBooks = Object.entries(monthCounts)
+    .map(([titulo, count]) => ({ titulo, count, libro: libros.find((l) => l.titulo === titulo) }))
+    .filter(({ titulo, libro }) => {
+      const matchQ = !q || titulo.toLowerCase().includes(q) || (libro?.autor || "").toLowerCase().includes(q);
+      const matchG = msGenero === "todos" || (libro?.genero || "") === msGenero;
+      return matchQ && matchG;
+    })
+    .sort((a, b) => b.count - a.count);
+  const maxMonthCount = filteredMonthBooks.length > 0 ? filteredMonthBooks[0].count : 1;
 
   const activityItems = [
     { time: "Hace 2h", icon: CheckCircle2, color: "text-emerald-500", ring: "bg-emerald-100", text: <><strong>Andrés Rojas</strong> devolvió <span className="font-semibold text-[#1a2520]">Pedro Páramo</span></> },
@@ -587,7 +627,7 @@ function Inicio({ usuarios, libros, prestamos }) {
       </div>
 
       {/* STATS RING ROW */}
-      <div className="grid grid-cols-4 gap-5">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         {[
           { label: "Libros", value: librosCount, icon: Library, color: "#16a34a", sub: `${disponibles} disponibles`, delay: 0 },
           { label: "Usuarios", value: usuariosCount, icon: Users, color: "#f59e0b", sub: `${usuarios.filter(u => u.estado === "Activo").length} activos`, delay: 100 },
@@ -616,7 +656,7 @@ function Inicio({ usuarios, libros, prestamos }) {
       <div className="grid grid-cols-12 gap-5">
 
         {/* LEFT — Donut + Quick Info */}
-        <div className="col-span-4 space-y-5">
+        <div className="col-span-12 lg:col-span-4 space-y-5">
           <div className="bg-white rounded-2xl border border-amber-100/60 p-6 shadow-sm animate-fadeIn" style={{ animationDelay: "400ms" }}>
             <h3 className="font-serif text-base text-[#1a2520] mb-4">Estado de préstamos</h3>
             <div className="flex justify-center mb-4">
@@ -637,11 +677,11 @@ function Inicio({ usuarios, libros, prestamos }) {
             <h3 className="font-serif text-base text-[#1a2520] mb-4">Acciones rápidas</h3>
             <div className="space-y-2.5">
               {[
-                { icon: Plus, label: "Registrar préstamo", gradient: "from-emerald-500 to-green-600" },
-                { icon: User, label: "Nuevo usuario", gradient: "from-amber-500 to-orange-500" },
-                { icon: BookCopy, label: "Agregar libro", gradient: "from-blue-500 to-indigo-600" },
-              ].map(({ icon: Icon, label, gradient }, i) => (
-                <button key={i} className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-amber-50/60 transition-all duration-200 group cursor-pointer text-left">
+                { icon: Plus, label: "Registrar préstamo", gradient: "from-emerald-500 to-green-600", tab: "prestamos" },
+                { icon: User, label: "Nuevo usuario", gradient: "from-amber-500 to-orange-500", tab: "usuarios" },
+                { icon: BookCopy, label: "Agregar libro", gradient: "from-blue-500 to-indigo-600", tab: "libros" },
+              ].map(({ icon: Icon, label, gradient, tab }, i) => (
+                <button key={i} onClick={() => navigate && navigate(tab)} className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-amber-50/60 transition-all duration-200 group cursor-pointer text-left">
                   <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-200`}>
                     <Icon size={16} className="text-white" />
                   </div>
@@ -654,7 +694,7 @@ function Inicio({ usuarios, libros, prestamos }) {
         </div>
 
         {/* CENTER — Top Books */}
-        <div className="col-span-5">
+        <div className="col-span-12 lg:col-span-5">
           <div className="bg-white rounded-2xl border border-amber-100/60 p-6 shadow-sm h-full animate-fadeIn" style={{ animationDelay: "450ms" }}>
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2.5">
@@ -693,7 +733,7 @@ function Inicio({ usuarios, libros, prestamos }) {
         </div>
 
         {/* RIGHT — Activity Timeline */}
-        <div className="col-span-3">
+        <div className="col-span-12 lg:col-span-3">
           <div className="bg-white rounded-2xl border border-amber-100/60 p-5 shadow-sm h-full animate-fadeIn" style={{ animationDelay: "500ms" }}>
             <div className="flex items-center gap-2.5 mb-5">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-sm">
@@ -737,7 +777,7 @@ function Inicio({ usuarios, libros, prestamos }) {
         </div>
         <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-thin">
           {prestamos.filter((p) => p.estado === "Vencido").map((p, i) => (
-            <div key={p.id} className="relative shrink-0 w-72 bg-gradient-to-br from-white to-rose-50/50 rounded-2xl border border-rose-200/50 p-5 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 overflow-hidden group cursor-default" style={{ animationDelay: `${650 + i * 80}ms` }}>
+            <div key={p.id} onClick={() => navigate && navigate("prestamos")} className="relative shrink-0 w-72 bg-gradient-to-br from-white to-rose-50/50 rounded-2xl border border-rose-200/50 p-5 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 overflow-hidden group cursor-pointer" style={{ animationDelay: `${650 + i * 80}ms` }}>
               <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-rose-500 to-red-500" />
               <div className="flex items-start justify-between mb-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-100 to-red-100 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-200 shadow-sm">
@@ -759,6 +799,75 @@ function Inicio({ usuarios, libros, prestamos }) {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* MÁS PRESTADOS DEL MES — con búsqueda y filtros */}
+      <div className="animate-fadeIn" style={{ animationDelay: "700ms" }}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 flex-wrap">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center shadow-sm">
+              <TrendingUp size={15} className="text-white" />
+            </div>
+            <h3 className="font-serif text-base text-[#1a2520]">Más prestados del mes</h3>
+            <span className="text-[10px] uppercase tracking-widest font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full border border-orange-200 capitalize">{monthLabel(now)}</span>
+          </div>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+            <div className="relative">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#a89f81]" />
+              <input
+                value={msSearch}
+                onChange={(e) => setMsSearch(e.target.value)}
+                placeholder="Buscar por título o autor..."
+                className="w-full sm:w-56 pl-9 pr-3 py-2 rounded-xl border border-amber-200/70 bg-white text-sm text-[#1a2520] placeholder:text-[#a89f81] focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:border-emerald-300"
+              />
+            </div>
+            <div className="relative">
+              <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#a89f81]" />
+              <select
+                value={msGenero}
+                onChange={(e) => setMsGenero(e.target.value)}
+                className="w-full sm:w-44 pl-9 pr-8 py-2 rounded-xl border border-amber-200/70 bg-white text-sm text-[#1a2520] focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:border-emerald-300 appearance-none"
+              >
+                <option value="todos">Todos los géneros</option>
+                {generos.map((g) => <option key={g} value={g}>{g}</option>)}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {filteredMonthBooks.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            {filteredMonthBooks.map(({ titulo, count, libro }, i) => (
+              <div key={titulo} onClick={() => navigate && navigate("prestamos")} className="group relative bg-white rounded-2xl border border-amber-100/60 p-5 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 overflow-hidden cursor-pointer">
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-orange-500 to-amber-500" />
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="relative w-14 h-20 rounded-lg overflow-hidden shadow-md shrink-0 group-hover:scale-105 transition-transform duration-200">
+                    <img src={libro?.imagen_url || ""} alt={titulo} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black shrink-0 ${["bg-orange-100 text-orange-700", "bg-amber-100 text-amber-700", "bg-yellow-100 text-yellow-700", "bg-amber-50 text-amber-600"][i % 4]}`}>{i + 1}</span>
+                      <span className="text-[10px] font-black text-orange-600 bg-orange-100 rounded-full px-2 py-0.5">{count} {count === 1 ? "préstamo" : "préstamos"}</span>
+                    </div>
+                    <p className="text-sm font-serif font-bold text-[#1a2520] leading-snug line-clamp-2">{titulo}</p>
+                    <p className="text-[11px] text-[#8a8368] mt-0.5 truncate">{libro?.autor || "Desconocido"}</p>
+                    <p className="text-[10px] uppercase tracking-wider text-[#a89f81] mt-0.5">{libro?.genero || "—"}</p>
+                  </div>
+                </div>
+                <div className="h-2 rounded-full bg-orange-100 overflow-hidden">
+                  <div className="h-full rounded-full bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-700" style={{ width: `${(count / maxMonthCount) * 100}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white rounded-2xl border border-amber-100/60 p-8 text-center shadow-sm">
+            <BookOpen size={28} className="mx-auto text-[#a89f81] mb-2" />
+            <p className="text-sm font-semibold text-[#1a2520]">No hay préstamos este mes</p>
+            <p className="text-xs text-[#8a8368] mt-1">Ajusta la búsqueda o los filtros, o registra préstamos para ver la actividad del mes.</p>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -892,7 +1001,8 @@ function UsuariosView({ usuarios, refresh, addToast }) {
       />
       <div className="relative bg-white border border-[#d4c9a8]/50 rounded-2xl overflow-hidden shadow-lg animate-fadeIn" style={{ animationDelay: "100ms" }}>
         <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-500 via-emerald-500 to-blue-500" />
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full text-sm whitespace-nowrap">
           <thead>
             <tr className="bg-gradient-to-r from-amber-100 to-yellow-50 text-amber-800 text-xs uppercase tracking-wide">
               {[{ key: "id", label: "ID", icon: Hash }, { key: "nombre", label: "Nombre", icon: User }, { key: "email", label: "Correo", icon: Mail }, { key: "rol", label: "Rol", icon: ShieldCheck }, { key: "prestamos", label: "Préstamos", icon: BookOpen }, { key: "estado", label: "Estado", icon: Eye }].map(({ key, label, icon: Icon }) => (
@@ -929,6 +1039,7 @@ function UsuariosView({ usuarios, refresh, addToast }) {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       <Modal isOpen={showModal} onClose={handleCloseModal} title="Nuevo Usuario" icon={UserPlus}>
@@ -992,7 +1103,102 @@ function UsuariosView({ usuarios, refresh, addToast }) {
   );
 }
 
-const UserPlus = Plus;
+// ============ LIBRO ABIERTO (OVERLAY CON PÁGINAS) ============
+
+function LibroAbierto({ libro, color, onClose, esAdmin, esUsuarioLector, yaSolicitado, onSolicitar, onEditar, onToggleDisponible }) {
+  return (
+    <div className="fixed inset-0 z-[80] overflow-y-auto animate-fadeIn">
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative min-h-full flex items-center justify-center p-4 sm:p-6 pointer-events-none">
+        <div className="relative pointer-events-auto w-full max-w-3xl">
+        <button onClick={onClose} className="absolute -top-4 -right-4 z-20 w-9 h-9 rounded-full bg-white shadow-xl flex items-center justify-center text-[#1a2520] hover:bg-rose-500 hover:text-white transition-colors cursor-pointer" title="Cerrar">
+          <X size={18} />
+        </button>
+
+        {/* El libro abierto */}
+        <div className="relative" style={{ perspective: "1200px" }}>
+          <div className="flex items-stretch justify-center">
+            {/* Página izquierda */}
+            <div className="page-left flex-1 md:max-w-[380px]">
+              <div className="page-curl relative bg-[#fdfaf1] h-[300px] md:h-[420px] rounded-l-md border-y-2 border-l-2 border-[#d4c9a8] px-5 py-4 md:px-7 md:py-8 shadow-xl flex flex-col">
+                <div className="text-center">
+                  <h3 className="font-serif text-sm md:text-xl text-[#1a2520] mb-1 leading-snug">{libro.titulo}</h3>
+                  <p className="text-[11px] md:text-sm text-[#8a8368] mb-3 md:mb-5">{libro.autor}</p>
+                </div>
+                {libro.imagen_url ? (
+                  <img src={libro.imagen_url} alt={libro.titulo} className="mx-auto h-28 md:h-48 max-w-full rounded-md object-cover shadow-md border border-[#e6dfc9]" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                ) : (
+                  <div className={`mx-auto h-28 md:h-48 w-20 md:w-40 rounded-md ${color?.bg || "bg-gradient-to-b from-emerald-700 to-green-900"} flex items-center justify-center shadow-md`}>
+                    <BookOpen size={44} className="text-white/40" />
+                  </div>
+                )}
+                <div className="mt-auto pt-3 md:pt-4 flex items-center justify-between text-[10px] text-[#a89f81] uppercase tracking-widest">
+                  <span>{libro.genero}</span>
+                  <div className="flex items-center gap-1">
+                    <span className={`w-2 h-2 rounded-full ${libro.disponible ? "bg-emerald-500" : "bg-rose-500"}`} />
+                    {libro.disponible ? "Disponible" : "Prestado"}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Lomo central */}
+            <div className="relative w-8 md:w-10 -mx-2 z-10">
+              <div className="absolute inset-0 bg-gradient-to-b from-[#3c2a17] to-[#2a1d10] rounded-sm shadow-2xl" />
+              <div className="absolute inset-y-0 left-0 w-1 bg-white/10" />
+              <div className="absolute inset-y-0 right-0 w-1 bg-black/30" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[2px] h-8 md:h-16 bg-[#8b5e3c]/50 rounded-full" />
+            </div>
+
+            {/* Página derecha (sinopsis) */}
+            <div className="page-right flex-1 md:max-w-[380px]">
+              <div className="page-curl relative bg-[#fdfaf1] h-[300px] md:h-[420px] rounded-r-md border-y-2 border-r-2 border-[#d4c9a8] px-5 py-4 md:px-7 md:py-8 shadow-xl flex flex-col">
+                <div className="flex items-center justify-between mb-3 md:mb-5">
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-amber-700 font-black bg-amber-100 px-3 py-1 rounded-full">Sinopsis</span>
+                  <span className="text-[10px] font-mono text-[#a89f81]">{libro.id}</span>
+                </div>
+                <div className="flex-1 overflow-y-auto pr-1">
+                  <p className="text-xs md:text-sm leading-relaxed text-[#4a4738] text-justify">
+                    {libro.sinopsis || "Este libro aún no tiene sinopsis disponible."}
+                  </p>
+                </div>
+                <div className="mt-auto pt-3 md:pt-4 flex items-center justify-end text-[10px] text-[#a89f81] uppercase tracking-widest">
+                  {libro.autor} · {libro.genero}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Acciones debajo del libro */}
+        <div className="mt-5 flex justify-center gap-2 flex-wrap">
+          {esUsuarioLector && libro.disponible && (
+            yaSolicitado(libro.titulo) ? (
+              <span className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-100 text-amber-800 text-xs font-bold border border-amber-300/60">
+                <Hourglass size={13} /> Solicitud pendiente
+              </span>
+            ) : (
+              <button onClick={() => { onSolicitar(libro); onClose(); }} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-green-700 text-white text-xs font-bold hover:from-emerald-500 hover:to-green-600 transition-all duration-200 cursor-pointer shadow-lg">
+                <Send size={13} /> Solicitar préstamo
+              </button>
+            )
+          )}
+          {esAdmin && (
+            <>
+              <button onClick={() => { onEditar(libro); onClose(); }} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-100 text-amber-800 text-xs font-bold hover:bg-amber-200 transition-all duration-200 cursor-pointer shadow-lg">
+                <Pencil size={13} /> Editar
+              </button>
+              <button onClick={() => { onToggleDisponible(libro); onClose(); }} className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer shadow-lg ${libro.disponible ? "bg-gradient-to-r from-rose-100 to-red-100 text-rose-700 border border-rose-300/60 hover:from-rose-200 hover:to-red-200" : "bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-700 border border-emerald-300/60 hover:from-emerald-200 hover:to-green-200"}`}>
+                {libro.disponible ? "Marcar como prestado" : "Marcar como disponible"}
+              </button>
+            </>
+          )}
+        </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // ============ LIBROS VIEW ============
 
@@ -1005,18 +1211,34 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
   const [titulo, setTitulo] = useState("");
   const [autor, setAutor] = useState("");
   const [genero, setGenero] = useState("Novela");
+  const [sinopsis, setSinopsis] = useState("");
+  const [imagenUrl, setImagenUrl] = useState("");
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
+  const [editandoLibro, setEditandoLibro] = useState(null);
   const [detalleId, setDetalleId] = useState(null);
   const [detalleData, setDetalleData] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [libroAbierto, setLibroAbierto] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
-  const resetForm = () => { setTitulo(""); setAutor(""); setGenero("Novela"); setErrors({}); setTouched({}); };
+  const resetForm = () => { setTitulo(""); setAutor(""); setGenero("Novela"); setSinopsis(""); setImagenUrl(""); setErrors({}); setTouched({}); };
 
-  const handleOpenModal = () => { resetForm(); setShowModal(true); };
+  const handleOpenModal = () => { resetForm(); setEditandoLibro(null); setShowModal(true); };
 
-  const handleCloseModal = () => { setShowModal(false); setTimeout(resetForm, 300); };
+  const handleCloseModal = () => { setShowModal(false); setEditandoLibro(null); setTimeout(resetForm, 300); };
+
+  const handleEditar = (libro) => {
+    setTitulo(libro.titulo);
+    setAutor(libro.autor);
+    setGenero(libro.genero);
+    setSinopsis(libro.sinopsis || "");
+    setImagenUrl(libro.imagen_url || "");
+    setErrors({});
+    setTouched({});
+    setEditandoLibro(libro);
+    setShowModal(true);
+  };
 
   const handleBlur = (field) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
@@ -1048,6 +1270,7 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
     const newBook = {
       id: nextId(libros, "L"),
       titulo: titulo.trim(), autor: autor.trim(), genero, disponible: true,
+      sinopsis: sinopsis.trim() || null, imagen_url: imagenUrl.trim() || null,
     };
     try {
       await createLibro(newBook);
@@ -1059,6 +1282,26 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
     }
   };
 
+  const handleSaveEdit = async () => {
+    if (!editandoLibro) return;
+    const e = { titulo: validateTitle(titulo, "El título"), autor: validateName(autor, "El autor") };
+    setErrors(e);
+    setTouched({ titulo: true, autor: true });
+    if (e.titulo || e.autor) return;
+    try {
+      await updateLibro(editandoLibro.id, {
+        titulo: titulo.trim(), autor: autor.trim(), genero,
+        disponible: editandoLibro.disponible,
+        sinopsis: sinopsis.trim() || null, imagen_url: imagenUrl.trim() || null,
+      });
+      await refresh();
+      handleCloseModal();
+      addToast({ type: "success", message: `"${titulo.trim()}" actualizado` });
+    } catch (err) {
+      addToast({ type: "error", message: `No se pudo actualizar: ${err.message}` });
+    }
+  };
+
   const toggleDisponible = async (libro) => {
     try {
       await updateLibro(libro.id, {
@@ -1066,6 +1309,8 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
         autor: libro.autor,
         genero: libro.genero,
         disponible: !libro.disponible,
+        sinopsis: libro.sinopsis,
+        imagen_url: libro.imagen_url,
       });
       await refresh();
     } catch (err) {
@@ -1109,7 +1354,24 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
     }
   };
 
-  const coverGradients = ["from-emerald-600 to-green-800", "from-amber-500 to-orange-700", "from-blue-600 to-indigo-800", "from-rose-600 to-red-800", "from-violet-600 to-purple-800", "from-teal-500 to-cyan-700"];
+  const bookColors = [
+    { bg: "bg-gradient-to-b from-red-700 to-red-900", accent: "#991b1b", spine: "from-red-600 to-red-800" },
+    { bg: "bg-gradient-to-b from-emerald-700 to-emerald-900", accent: "#065f46", spine: "from-emerald-600 to-emerald-800" },
+    { bg: "bg-gradient-to-b from-blue-700 to-blue-900", accent: "#1e40af", spine: "from-blue-600 to-blue-800" },
+    { bg: "bg-gradient-to-b from-amber-600 to-amber-800", accent: "#92400e", spine: "from-amber-500 to-amber-700" },
+    { bg: "bg-gradient-to-b from-violet-700 to-violet-900", accent: "#5b21b6", spine: "from-violet-600 to-violet-800" },
+    { bg: "bg-gradient-to-b from-rose-700 to-rose-900", accent: "#9f1239", spine: "from-rose-600 to-rose-800" },
+    { bg: "bg-gradient-to-b from-teal-700 to-teal-900", accent: "#115e59", spine: "from-teal-600 to-teal-800" },
+    { bg: "bg-gradient-to-b from-orange-600 to-orange-800", accent: "#9a3412", spine: "from-orange-500 to-orange-700" },
+    { bg: "bg-gradient-to-b from-indigo-700 to-indigo-900", accent: "#3730a3", spine: "from-indigo-600 to-indigo-800" },
+    { bg: "bg-gradient-to-b from-stone-600 to-stone-800", accent: "#44403c", spine: "from-stone-500 to-stone-700" },
+  ];
+
+  const booksPerShelf = 6;
+  const shelves = [];
+  for (let i = 0; i < filtered.length; i += booksPerShelf) {
+    shelves.push(filtered.slice(i, i + booksPerShelf));
+  }
 
   return (
     <div className="relative animate-fadeIn">
@@ -1129,7 +1391,7 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
           )
         }
       />
-      <div className="relative mb-6 group">
+      <div className="relative mb-8 group">
         <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400 group-focus-within:text-amber-500 transition-colors" />
         <input placeholder="Buscar por título, autor o género..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full bg-white border border-amber-200/60 rounded-2xl pl-11 pr-14 py-3 text-sm text-[#1a2520] placeholder:text-amber-400 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-300/15 focus:shadow-md transition-all duration-200 shadow-sm" />
         {search && (
@@ -1146,48 +1408,106 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
           <p className="text-[#8a8368] text-sm mt-1">Intenta con otro término de búsqueda</p>
         </div>
       )}
-      <div className="grid grid-cols-3 gap-5">
-        {filtered.map((l, i) => (
-          <div key={l.id} onClick={() => verDetalle(l.id)} className="relative bg-white border border-[#d4c9a8]/40 rounded-2xl overflow-hidden flex flex-col transition-all duration-300 cursor-pointer animate-fadeIn group hover:-translate-y-1 hover:shadow-lg" style={{ animationDelay: `${i * 60}ms` }} onMouseEnter={() => setHoveredCard(l.id)} onMouseLeave={() => setHoveredCard(null)}>
-            <div className={`h-28 bg-gradient-to-br ${coverGradients[i % coverGradients.length]} flex items-center justify-center relative overflow-hidden`}>
-              <div className="absolute inset-0 bg-black/10" />
-              <BookOpen size={36} className="text-white/30 relative z-10 group-hover:scale-110 transition-transform duration-300" />
-              <div className="absolute bottom-2 right-3"><span className="font-mono text-[10px] text-white/40">{l.id}</span></div>
-              {esAdmin && (
-                <button onClick={(e) => { e.stopPropagation(); setConfirmDelete(l); }} className={`absolute top-2 right-2 p-1.5 rounded-lg bg-black/20 text-white/70 hover:bg-rose-500 hover:text-white transition-all duration-200 cursor-pointer ${hoveredCard === l.id ? "opacity-100" : "opacity-0"}`}><Trash2 size={12} /></button>
-              )}
-            </div>
-            <div className="p-4 flex flex-col flex-1">
-              <h3 className="font-serif text-[15px] text-[#1a2520] leading-snug mb-2">{l.titulo}</h3>
-              <p className="text-sm text-[#8a8368] mb-3 flex items-center gap-1.5"><Feather size={12} className="text-[#8b5e3c]/50" />{l.autor}</p>
-              <div className="mt-auto flex items-center justify-between gap-2">
-                <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-amber-600 bg-amber-100 px-2.5 py-1 rounded-full">{l.genero}</span>
-                {esUsuarioLector ? (
-                  l.disponible ? (
-                    yaSolicitado(l.titulo) ? (
-                      <span className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-700 border border-amber-300/60">
-                        <Hourglass size={11} /> Solicitado
-                      </span>
-                    ) : (
-                      <button onClick={(e) => { e.stopPropagation(); handleSolicitar(l); }} className="flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full bg-gradient-to-r from-emerald-600 to-green-700 text-white hover:from-emerald-500 hover:to-green-600 transition-all duration-200 hover:scale-105 cursor-pointer shadow-sm">
-                        <Send size={11} /> Solicitar
-                      </button>
-                    )
-                  ) : (
-                    <span className="text-xs font-bold px-3 py-1 rounded-full bg-gradient-to-r from-rose-100 to-red-100 text-rose-700 border border-rose-300/60 cursor-not-allowed">Prestado</span>
-                  )
-                ) : (
-                  <button onClick={(e) => { e.stopPropagation(); if (esAdmin) toggleDisponible(l); }} className={`text-xs font-bold px-3 py-1 rounded-full transition-all duration-200 shadow-sm ${l.disponible ? "bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 border border-green-300/60" : "bg-gradient-to-r from-rose-100 to-red-100 text-rose-700 border border-rose-300/60"} ${esAdmin ? "hover:scale-105 cursor-pointer" : "cursor-default opacity-80"}`}>
-                    {l.disponible ? "Disponible" : "Prestado"}
-                  </button>
-                )}
+
+      <div className="space-y-3">
+        {shelves.map((shelfBooks, shelfIdx) => (
+          <div key={shelfIdx} className="animate-fadeIn" style={{ animationDelay: `${shelfIdx * 100}ms` }}>
+            <div className="bg-gradient-to-b from-[#f5f0e4] to-[#efe8d8] rounded-t-xl border border-[#d4c9a8]/40 border-b-0 px-6 pt-4 pb-0 relative" style={{ minHeight: "250px" }}>
+              <div className="absolute top-0 left-0 right-0 h-full opacity-[0.03]" style={{ backgroundImage: "repeating-linear-gradient(90deg, #8b5e3c 0px, transparent 1px, transparent 40px)" }} />
+              <div className="relative flex items-end justify-start gap-4 h-[200px] px-4">
+                {shelfBooks.map((l, i) => {
+                  const globalIdx = shelfIdx * booksPerShelf + i;
+                  const color = bookColors[globalIdx % bookColors.length];
+                  const bookHeight = 145 + (globalIdx % 3) * 15;
+                  const isHovered = hoveredCard === l.id;
+                  return (
+                    <div
+                      key={l.id}
+                      onMouseEnter={() => setHoveredCard(l.id)}
+                      onMouseLeave={() => setHoveredCard(null)}
+                      className="relative shrink-0"
+                      style={{ width: "52px", height: `${bookHeight}px` }}
+                    >
+                      {/* Libro en la estantería (lomo) — se oculta al sacarse */}
+                      <div
+                        className={`absolute inset-0 ${isHovered ? "opacity-0 pointer-events-none" : ""} transition-opacity duration-300 ${color.bg} rounded-r-md overflow-hidden shadow-lg cursor-pointer`}
+                        style={{ boxShadow: "2px 2px 8px rgba(0,0,0,0.3), inset -2px 0 4px rgba(0,0,0,0.2), inset 2px 0 4px rgba(255,255,255,0.05)" }}
+                        onMouseEnter={() => setHoveredCard(l.id)}
+                      >
+                        <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-r from-black/20 to-transparent" />
+                        <div className="absolute inset-y-0 right-0 w-0.5 bg-black/20" />
+                        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-8 h-[2px] bg-white/20 rounded-full" />
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-8 h-[2px] bg-white/20 rounded-full" />
+                        <div className="absolute inset-0 flex items-center justify-center px-1">
+                          <div className="book-spine text-white text-[9px] font-bold leading-tight tracking-wide drop-shadow-sm text-center max-h-full overflow-hidden" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}>
+                            {l.titulo.length > 18 ? l.titulo.slice(0, 18) + "…" : l.titulo}
+                          </div>
+                        </div>
+                        <div className="absolute top-1.5 right-1.5">
+                          <div className={`w-1.5 h-1.5 rounded-full ${!l.disponible ? "bg-red-400" : esUsuarioLector && yaSolicitado(l.titulo) ? "bg-amber-400" : "bg-emerald-400"} shadow-sm`} />
+                        </div>
+                      </div>
+
+                      {/* Libro sacado: portada + botón Abrir (se muestra al hover) */}
+                      {isHovered && (
+                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-50" style={{ transform: "translateX(-50%) translateY(-10px)" }}>
+                          <div className="relative" style={{ width: "150px" }}>
+                            {/* Portada */}
+                            <div
+                              onClick={() => verDetalle(l.id)}
+                              className="book-float-in w-[150px] h-[215px] rounded-r-lg rounded-l-sm overflow-hidden shadow-2xl cursor-pointer relative bg-white hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.4)] transition-shadow duration-300"
+                              style={{ transform: "perspective(800px) rotateY(-14deg)", transformOrigin: "left center" }}
+                            >
+                              {l.imagen_url ? (
+                                <img src={l.imagen_url} alt={l.titulo} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                              ) : (
+                                <div className={`w-full h-full ${color.bg} flex flex-col items-center justify-center p-2 relative`}>
+                                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+                                  <BookOpen size={36} className="text-white/40 mb-2" />
+                                  <div className="book-spine-horizontal text-white text-xs font-bold text-center px-1 leading-tight" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}>
+                                    {l.titulo}
+                                  </div>
+                                  <div className="mt-1 text-white/50 text-[8px] uppercase tracking-widest">{l.autor}</div>
+                                </div>
+                              )}
+                              <div className="absolute left-1 top-0 bottom-0 w-[3px] bg-gradient-to-r from-black/25 to-transparent pointer-events-none" />
+                              {esAdmin && (
+                                <div className="absolute top-1.5 right-1.5 flex gap-0.5">
+                                  <button onClick={(e) => { e.stopPropagation(); handleEditar(l); }} className="p-0.5 rounded bg-black/40 text-white/80 hover:bg-amber-500 hover:text-white transition-all duration-150 cursor-pointer" title="Editar libro">
+                                    <Pencil size={9} />
+                                  </button>
+                                  <button onClick={(e) => { e.stopPropagation(); setConfirmDelete(l); }} className="p-0.5 rounded bg-black/40 text-white/80 hover:bg-rose-500 hover:text-white transition-all duration-150 cursor-pointer" title="Eliminar libro">
+                                    <Trash2 size={9} />
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Botón Abrir (debajo a la derecha) */}
+                            <button
+                              onClick={(e) => { e.stopPropagation(); setLibroAbierto(l); }}
+                              className="absolute -right-3 -bottom-3 flex items-center gap-1 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-700 to-green-800 text-white text-[11px] font-bold hover:from-emerald-600 hover:to-green-700 shadow-lg shadow-emerald-900/30 hover:scale-105 transition-all duration-200 cursor-pointer z-10"
+                            >
+                              <BookOpen size={11} /> Abrir
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
+            </div>
+            <div className="shelf-plank h-4 rounded-b-lg relative">
+              <div className="absolute left-4 top-0 w-2 h-full bg-gradient-to-b from-[#5a3d1f] to-[#4a3018] rounded-b shadow-md" />
+              <div className="absolute right-4 top-0 w-2 h-full bg-gradient-to-b from-[#5a3d1f] to-[#4a3018] rounded-b shadow-md" />
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-amber-300/40 via-amber-200/60 to-amber-300/40" />
             </div>
           </div>
         ))}
       </div>
 
-      <Modal isOpen={showModal} onClose={handleCloseModal} title="Nuevo Libro" icon={BookCopy}>
+      <Modal isOpen={showModal} onClose={handleCloseModal} title={editandoLibro ? "Editar Libro" : "Nuevo Libro"} icon={BookCopy}>
         <FormField label="Título del libro" icon={BookOpen} error={errors.titulo} required>
           <input type="text" placeholder="Ej: Cien años de soledad" value={titulo} onChange={(e) => handleTituloChange(e.target.value)} onBlur={() => handleBlur("titulo")} maxLength={100} className={getInputClass(errors.titulo && touched.titulo)} />
         </FormField>
@@ -1199,9 +1519,31 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
             <option>Novela</option><option>Cuento</option><option>Poesía</option><option>Ensayo</option><option>Historia</option><option>Ciencia</option>
           </select>
         </FormField>
+        <FormField label="Sinopsis" icon={BookOpen}>
+          <textarea
+            placeholder="Breve descripción del libro..."
+            value={sinopsis}
+            onChange={(e) => setSinopsis(e.target.value)}
+            rows={3}
+            maxLength={600}
+            className={`${getInputClass(false)} resize-none`}
+          />
+        </FormField>
+        <FormField label="URL de la imagen del libro" icon={Feather}>
+          <input type="url" placeholder="https://ejemplo.com/portada.jpg" value={imagenUrl} onChange={(e) => setImagenUrl(e.target.value)} maxLength={500} className={getInputClass(false)} />
+          {imagenUrl && (
+            <div className="mt-2">
+              <img src={imagenUrl} alt="Vista previa" className="h-28 rounded-lg object-cover border border-[#d4c9a8] shadow-sm" onError={(e) => { e.currentTarget.style.opacity = "0.3"; }} />
+            </div>
+          )}
+        </FormField>
         <div className="flex justify-end gap-2 mt-6">
           <FormButton variant="secondary" onClick={handleCloseModal}>Cancelar</FormButton>
-          <FormButton variant="primary" onClick={handleCreate}>Agregar libro</FormButton>
+          {editandoLibro ? (
+            <FormButton variant="primary" onClick={handleSaveEdit}>Guardar cambios</FormButton>
+          ) : (
+            <FormButton variant="primary" onClick={handleCreate}>Agregar libro</FormButton>
+          )}
         </div>
       </Modal>
 
@@ -1210,26 +1552,81 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
           <p className="text-sm text-[#8a8368] text-center py-6 animate-fadeIn">Cargando...</p>
         ) : (
           <div className="space-y-4 animate-fadeIn">
-            <div className="h-24 rounded-xl bg-gradient-to-br from-emerald-600 to-green-800 flex items-center justify-center relative overflow-hidden">
-              <div className="absolute inset-0 bg-black/10" />
-              <BookOpen size={30} className="text-white/30 relative z-10" />
-              <span className="absolute bottom-2 right-3 font-mono text-[10px] text-white/50">{detalleData.id}</span>
+            <div className="flex gap-4">
+              {detalleData.imagen_url ? (
+                <div className="w-24 h-32 shrink-0 rounded-lg overflow-hidden border border-[#d4c9a8] shadow-md bg-white">
+                  <img src={detalleData.imagen_url} alt={detalleData.titulo} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                </div>
+              ) : (
+                <div className="w-24 h-32 shrink-0 rounded-lg bg-gradient-to-br from-emerald-600 to-green-800 flex items-center justify-center shadow-md">
+                  <BookOpen size={32} className="text-white/40" />
+                </div>
+              )}
+              <div className="min-w-0">
+                <p className="font-serif text-lg text-[#1a2520] leading-snug">{detalleData.titulo}</p>
+                <p className="text-sm text-[#8a8368] mt-1 flex items-center gap-1.5"><Feather size={12} />{detalleData.autor}</p>
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-amber-600 bg-amber-100 px-2.5 py-1 rounded-full">{detalleData.genero}</span>
+                  <span className={`text-xs font-bold px-3 py-1 rounded-full ${detalleData.disponible ? "bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 border border-green-300/60" : "bg-gradient-to-r from-rose-100 to-red-100 text-rose-700 border border-rose-300/60"}`}>
+                    {detalleData.disponible ? "Disponible" : "Prestado"}
+                  </span>
+                </div>
+              </div>
             </div>
-            <div>
-              <p className="font-serif text-lg text-[#1a2520] leading-snug">{detalleData.titulo}</p>
-              <p className="text-sm text-[#8a8368] mt-1 flex items-center gap-1.5"><Feather size={12} />{detalleData.autor}</p>
-            </div>
-            <div className="flex items-center justify-between pt-1">
-              <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-amber-600 bg-amber-100 px-2.5 py-1 rounded-full">{detalleData.genero}</span>
-              <span className={`text-xs font-bold px-3 py-1 rounded-full ${detalleData.disponible ? "bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 border border-green-300/60" : "bg-gradient-to-r from-rose-100 to-red-100 text-rose-700 border border-rose-300/60"}`}>
-                {detalleData.disponible ? "Disponible" : "Prestado"}
-              </span>
-            </div>
+            {detalleData.sinopsis && (
+              <div className="rounded-xl bg-white/80 border border-[#d4c9a8] px-4 py-3">
+                <p className="text-[10px] uppercase tracking-wider text-[#8a8368] font-semibold mb-1.5">Sinopsis</p>
+                <p className="text-sm text-[#4a4738] leading-relaxed">{detalleData.sinopsis}</p>
+              </div>
+            )}
+            {esAdmin && (
+              <div className="flex justify-end gap-2 pt-2 border-t border-[#d4c9a8]/60">
+                <button onClick={() => { setDetalleId(null); handleEditar(detalleData); }} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-100 text-amber-800 text-xs font-bold hover:bg-amber-200 transition-all duration-200 cursor-pointer shadow-sm">
+                  <Pencil size={13} /> Editar
+                </button>
+                {detalleData.disponible ? (
+                  <button onClick={() => { toggleDisponible(detalleData); setDetalleId(null); }} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-rose-100 to-red-100 text-rose-700 text-xs font-bold border border-rose-300/60 hover:from-rose-200 hover:to-red-200 transition-all duration-200 cursor-pointer shadow-sm">
+                    Marcar como prestado
+                  </button>
+                ) : (
+                  <button onClick={() => { toggleDisponible(detalleData); setDetalleId(null); }} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-700 text-xs font-bold border border-emerald-300/60 hover:from-emerald-200 hover:to-green-200 transition-all duration-200 cursor-pointer shadow-sm">
+                    Marcar como disponible
+                  </button>
+                )}
+              </div>
+            )}
+            {esUsuarioLector && detalleData.disponible && (
+              <div className="flex justify-end pt-2 border-t border-[#d4c9a8]/60">
+                {yaSolicitado(detalleData.titulo) ? (
+                  <span className="flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-xl bg-amber-100 text-amber-700 border border-amber-300/60">
+                    <Hourglass size={13} /> Solicitud pendiente
+                  </span>
+                ) : (
+                  <button onClick={() => { handleSolicitar(detalleData); setDetalleId(null); }} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-green-700 text-white text-xs font-bold hover:from-emerald-500 hover:to-green-600 transition-all duration-200 cursor-pointer shadow-sm">
+                    <Send size={13} /> Solicitar préstamo
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         )}
       </Modal>
 
       <ConfirmDialog isOpen={!!confirmDelete} onClose={() => setConfirmDelete(null)} onConfirm={handleDelete} title="Eliminar libro" message={`¿Estás seguro de eliminar "${confirmDelete?.titulo}" del catálogo? Esta acción no se puede deshacer.`} icon={Trash2} />
+
+      {libroAbierto && (
+        <LibroAbierto
+          libro={libroAbierto}
+          color={bookColors[libros.findIndex((b) => b.id === libroAbierto.id) % bookColors.length]}
+          onClose={() => setLibroAbierto(null)}
+          esAdmin={esAdmin}
+          esUsuarioLector={esUsuarioLector}
+          yaSolicitado={yaSolicitado}
+          onSolicitar={handleSolicitar}
+          onEditar={handleEditar}
+          onToggleDisponible={toggleDisponible}
+        />
+      )}
     </div>
   );
 }
@@ -1412,7 +1809,7 @@ function PrestamosView({ prestamos, usuarios, libros, refresh, addToast }) {
             <h3 className="font-serif text-base text-[#1a2520]">Solicitudes de préstamo</h3>
             <span className="text-[10px] font-black text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-200">{solicitudesPendientes.length}</span>
           </div>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {solicitudesPendientes.map((s) => (
               <div key={s.id} className="relative bg-gradient-to-br from-white to-amber-50/60 rounded-2xl border border-amber-200/60 p-5 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
                 <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-400 to-orange-500" />
@@ -1440,7 +1837,8 @@ function PrestamosView({ prestamos, usuarios, libros, refresh, addToast }) {
 
       <div className="relative bg-white border border-[#d4c9a8]/50 rounded-2xl overflow-hidden shadow-lg animate-fadeIn" style={{ animationDelay: "100ms" }}>
         <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 via-amber-500 to-emerald-500" />
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full text-sm whitespace-nowrap">
           <thead>
             <tr className="bg-gradient-to-r from-amber-100 to-yellow-50 text-amber-800 text-xs uppercase tracking-wide">
               <th className="text-left font-bold px-5 py-3.5">ID</th>
@@ -1489,6 +1887,7 @@ function PrestamosView({ prestamos, usuarios, libros, refresh, addToast }) {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       <Modal isOpen={showModal} onClose={handleCloseModal} title="Registrar Préstamo" icon={ArrowLeftRight}>
@@ -1581,7 +1980,7 @@ function MisPrestamosView({ misPrestamos, libros }) {
             </div>
             <h3 className="font-serif text-base text-[#1a2520]">En espera de aprobación</h3>
           </div>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {pendientes.map((s) => (
               <div key={s.id} className="relative bg-gradient-to-br from-white to-amber-50/60 rounded-2xl border border-amber-200/60 p-5 shadow-sm overflow-hidden group">
                 <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-400 to-orange-500" />
@@ -1602,7 +2001,8 @@ function MisPrestamosView({ misPrestamos, libros }) {
       {misPrestamos.filter((p) => p.estado !== "Pendiente").length > 0 ? (
         <div className="relative bg-white border border-[#d4c9a8]/50 rounded-2xl overflow-hidden shadow-lg animate-fadeIn">
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 via-amber-500 to-emerald-500" />
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm whitespace-nowrap">
             <thead>
               <tr className="bg-gradient-to-r from-amber-100 to-yellow-50 text-amber-800 text-xs uppercase tracking-wide">
                 <th className="text-left font-bold px-5 py-3.5">Libro</th>
@@ -1629,9 +2029,10 @@ function MisPrestamosView({ misPrestamos, libros }) {
                     )}
                   </td>
                 </tr>
-              ))}
-            </tbody>
+            ))}
+          </tbody>
           </table>
+          </div>
         </div>
       ) : (
         pendientes.length === 0 && (
@@ -1658,12 +2059,19 @@ const NAV = [
 
 // ============ SIDEBAR ============
 
-function Sidebar({ tab, setTab, collapsed, setCollapsed, user, onLogout }) {
+function Sidebar({ tab, setTab, collapsed, setCollapsed, user, onLogout, mobileOpen, onMobileClose }) {
   const items = NAV.filter((item) => item.roles.includes(user?.rol));
   const rolInfo = ROL_BADGE_STYLE[user?.rol];
   return (
-    <aside className={`shrink-0 flex flex-col transition-all duration-300 ease-in-out ${collapsed ? "w-[72px]" : "w-64"} bg-gradient-to-b from-[#0f2b1a] via-[#164a2d] to-[#0f2b1a] text-[#f7f2e7] shadow-2xl shadow-black/20`}>
-      <div className="px-4 py-6 border-b border-white/10">
+    <aside className={`shrink-0 flex flex-col transition-all duration-300 ease-in-out ${collapsed ? "w-[72px]" : "w-64"} bg-gradient-to-b from-[#0f2b1a] via-[#164a2d] to-[#0f2b1a] text-[#f7f2e7] shadow-2xl shadow-black/20 fixed lg:static z-40 inset-y-0 left-0 ${mobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}>
+      <div className="flex items-center gap-3 lg:hidden px-4 py-4 border-b border-white/10">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shrink-0">
+          <BookOpen size={20} className="text-white" />
+        </div>
+        {!collapsed && <p className="font-serif text-lg text-white">Biblioteca</p>}
+        <button onClick={onMobileClose} className="ml-auto p-1.5 rounded-lg hover:bg-white/10 text-[#9aa69e] cursor-pointer"><X size={18} /></button>
+      </div>
+      <div className="hidden lg:flex px-4 py-6 border-b border-white/10">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shrink-0 shadow-lg shadow-amber-500/25">
             <BookOpen size={20} className="text-white" />
@@ -1725,6 +2133,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [tab, setTab] = useState("inicio");
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [toasts, setToasts] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
   const [libros, setLibros] = useState([]);
@@ -1750,12 +2159,14 @@ export default function App() {
       .then((perfil) => setUser(perfil))
       .catch(() => {
         localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
         localStorage.removeItem("usuario");
       });
   }, []);
 
-  const handleLogin = (usuario, token) => {
+  const handleLogin = (usuario, token, refreshToken) => {
     localStorage.setItem("token", token);
+    if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
     localStorage.setItem("usuario", JSON.stringify(usuario));
     setUser(usuario);
     setTab(usuario.rol === "usuario" ? "libros" : "inicio");
@@ -1763,8 +2174,7 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("usuario");
+    logout();
     setUser(null);
     setTab("inicio");
     setUsuarios([]);
@@ -1813,7 +2223,7 @@ export default function App() {
   const tabActual = tabsPermitidos.some((item) => item.key === tab) ? tab : tabDefault;
 
   const views = {
-    inicio: <Inicio usuarios={usuarios} libros={libros} prestamos={prestamos} />,
+    inicio: <Inicio usuarios={usuarios} libros={libros} prestamos={prestamos} navigate={(k) => { setTab(k); setMobileOpen(false); }} />,
     usuarios: <UsuariosView usuarios={usuarios} refresh={refresh} addToast={addToast} />,
     libros: <LibrosView libros={libros} refresh={refresh} addToast={addToast} user={user} misPrestamos={misPrestamos} />,
     prestamos: <PrestamosView prestamos={prestamos} usuarios={usuarios} libros={libros} refresh={refresh} addToast={addToast} />,
@@ -1822,8 +2232,12 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex bg-[#faf6eb] font-sans">
-      <Sidebar tab={tabActual} setTab={setTab} collapsed={collapsed} setCollapsed={setCollapsed} user={user} onLogout={handleLogout} />
-      <main key={tabActual} className="flex-1 px-10 py-8 overflow-y-auto animate-fadeIn relative">
+      {mobileOpen && <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 lg:hidden" onClick={() => setMobileOpen(false)} />}
+      <Sidebar tab={tabActual} setTab={(k) => { setTab(k); setMobileOpen(false); }} collapsed={collapsed} setCollapsed={setCollapsed} user={user} onLogout={handleLogout} mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)} />
+      <main key={tabActual} className="flex-1 px-4 sm:px-8 lg:px-10 py-6 sm:py-8 overflow-y-auto overflow-x-hidden animate-fadeIn relative">
+        <button onClick={() => setMobileOpen(true)} className="lg:hidden mb-4 inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-white border border-[#d4c9a8] text-[#1a2520] text-sm shadow-sm hover:bg-amber-50 transition-colors cursor-pointer">
+          <Menu size={18} /> <span className="font-semibold">Menú</span>
+        </button>
         {loading ? (
           <div className="flex flex-col items-center justify-center py-40 gap-4 animate-fadeIn">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/25 animate-pulse">
@@ -1838,7 +2252,7 @@ export default function App() {
             </div>
             <p className="font-serif text-xl text-[#1a2520]">No se pudo conectar con el servidor</p>
             <p className="text-xs text-[#8a8368] max-w-md text-center break-all">{apiError}</p>
-            <p className="text-[11px] text-[#a89f81]">Verifica que el backend esté corriendo en el puerto 3000.</p>
+            <p className="text-[11px] text-[#a89f81]">Verifica que el backend esté corriendo en el puerto 3001.</p>
             <button onClick={handleRetry} className="mt-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-emerald-700 to-green-800 text-white hover:from-emerald-600 hover:to-green-700 active:scale-[0.97] transition-all duration-200 shadow-lg shadow-emerald-700/25 cursor-pointer">
               Reintentar
             </button>

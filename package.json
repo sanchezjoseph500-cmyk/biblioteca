@@ -1,26 +1,26 @@
 {
-  "name": "mi-proyectoreact",
+  "name": "biblioteca-central",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd biblioteca-backend && npm run dev",
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:frontend": "cd frontend && npm run dev -- --host",
+    "start:backend": "cd biblioteca-backend && npm start",
+    "seed": "cd biblioteca-backend && npm run seed",
+    "install:all": "cd frontend && npm install && cd ../biblioteca-backend && npm install",
+    "setup": "npm run install:all && npm run seed",
+    "build": "cd frontend && npm run build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "cd frontend && npm run preview"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.3.3",
-    "lucide-react": "^1.31.0",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "tailwindcss": "^4.3.3"
+    "concurrently": "^9.1.2"
   },
   "devDependencies": {
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.4",
-    "oxlint": "^1.75.0",
-    "vite": "^8.2.0"
+    "oxlint": "^1.75.0"
   }
 }

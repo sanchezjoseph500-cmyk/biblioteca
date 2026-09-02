@@ -1,0 +1,308 @@
+@import "tailwindcss";
+
+@theme {
+  --animate-fadeIn: fadeIn 0.4s ease-out both;
+  --animate-slideIn: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-slideOut: slideOut 0.25s ease-in both;
+  --animate-pulse-subtle: pulse-subtle 2s ease-in-out infinite;
+  --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
+  --animate-scaleIn: scaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-float-slow: float-slow 6s ease-in-out infinite;
+  --animate-float-medium: float-medium 4s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(30px) scale(0.96);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.65;
+  }
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(1deg);
+  }
+}
+
+@keyframes float-medium {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(-1deg);
+  }
+}
+
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #c9a24c40 transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #c9a24c40;
+    border-radius: 3px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: #c9a24c80;
+  }
+
+  ::selection {
+    background-color: #c9a24c30;
+    color: #1a2520;
+  }
+
+  body {
+    background-color: #f5f0e4;
+  }
+}
+
+.book-spine {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  transition: all 0.3s ease;
+}
+
+.book-spine-horizontal {
+  writing-mode: horizontal-tb;
+}
+
+.shelf-plank {
+  background: linear-gradient(180deg, #a0764a 0%, #8b6339 40%, #7a5530 70%, #6b4a28 100%);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.3),
+    0 2px 4px -2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.shelf-bracket {
+  background: linear-gradient(180deg, #6b4a28, #5a3d1f);
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes bookWobble {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-0.5deg); }
+  75% { transform: rotate(0.5deg); }
+}
+
+.book-hover-lift {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+
+.book-hover-lift:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.25), 0 4px 8px -2px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== LIBRO SALE DE LA ESTANTERÍA (hover) ===== */
+@keyframes bookPullOut {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-110px) rotate(2deg) scale(1.6);
+    opacity: 1;
+  }
+}
+
+.book-pull-out {
+  animation: bookPullOut 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.book-return {
+  animation: bookReturn 0.3s ease-in both;
+}
+
+@keyframes bookReturn {
+  0% {
+    transform: translateY(-110px) rotate(2deg) scale(1.6);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ===== LIBRO ABIERTO (overlay con páginas) ===== */
+@keyframes openBookIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) rotateY(25deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateY(0deg);
+  }
+}
+
+@keyframes pageSlideLeft {
+  0% {
+    transform: perspective(1000px) rotateY(18deg) translateX(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: perspective(1000px) rotateY(0deg) translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pageSlideRight {
+  0% {
+    transform: perspective(1000px) rotateY(-18deg) translateX(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: perspective(1000px) rotateY(0deg) translateX(0);
+    opacity: 1;
+  }
+}
+
+.book-open-anim {
+  animation: openBookIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.page-left {
+  animation: pageSlideLeft 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: right center;
+}
+
+.page-right {
+  animation: pageSlideRight 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: left center;
+}
+
+.page-curl {
+  position: relative;
+}
+.page-curl::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 16px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.02));
+  border-radius: 0 4px 4px 0;
+}
+
+@keyframes pageTurn {
+  0% {
+    transform: perspective(1200px) rotateY(0deg);
+  }
+  100% {
+    transform: perspective(1200px) rotateY(-160deg);
+  }
+}
+
+@keyframes bookFlap {
+  0%, 100% { transform: rotateY(0deg); }
+  50% { transform: rotateY(-4deg); }
+}
+
+.book-cover-hover {
+  animation: bookFlap 2.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+@keyframes floatBookCover {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes bookFloatIn {
+  0% {
+    transform: translateY(30px) scale(0.8) rotateY(-8deg);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-4px) scale(1.03) rotateY(-15deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1) rotateY(-14deg);
+    opacity: 1;
+  }
+}
+
+.book-float-in {
+  animation: bookFloatIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: bottom center;
+}

@@ -71,7 +71,7 @@ export default function Login({ onLogin }) {
     try {
       if (modo === "login") {
         const data = await login(email.trim(), password);
-        onLogin(data.usuario, data.token);
+        onLogin(data.usuario, data.token, data.refreshToken);
       } else {
         await registro({ nombre: nombre.trim(), email: email.trim(), password });
         setModo("login");

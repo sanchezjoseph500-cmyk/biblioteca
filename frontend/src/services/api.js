@@ -1,15 +1,50 @@
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const BASE_URL = import.meta.env.VITE_API_URL || "/api";
+
+let refreshPromise = null;
 
 function authHeaders() {
   const token = localStorage.getItem("token");
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
+async function tryRefresh() {
+  const refreshToken = localStorage.getItem("refreshToken");
+  if (!refreshToken) return false;
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      const res = await fetch(`${BASE_URL}/auth/refresh`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Sesión expirada");
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("refreshToken", data.refreshToken);
+      return true;
+    })().finally(() => {
+      refreshPromise = null;
+    });
+  }
+  return refreshPromise;
+}
+
 async function request(path, options = {}) {
-  const res = await fetch(`${BASE_URL}${path}`, {
+  let res = await fetch(`${BASE_URL}${path}`, {
     headers: { "Content-Type": "application/json", ...authHeaders() },
     ...options,
   });
+
+  if (res.status === 401 && path !== "/auth/login" && path !== "/auth/refresh") {
+    const refreshed = await tryRefresh();
+    if (refreshed) {
+      res = await fetch(`${BASE_URL}${path}`, {
+        headers: { "Content-Type": "application/json", ...authHeaders() },
+        ...options,
+      });
+    }
+  }
+
   let data = null;
   try {
     data = await res.json();
@@ -27,6 +62,21 @@ export const login = (email, password) =>
 
 export const registro = (datos) =>
   request("/auth/registro", { method: "POST", body: JSON.stringify(datos) });
+
+export const logout = () => {
+  const refreshToken = localStorage.getItem("refreshToken");
+  const token = localStorage.getItem("token");
+  if (refreshToken && token) {
+    fetch(`${BASE_URL}/auth/logout`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    }).catch(() => {});
+  }
+  localStorage.removeItem("token");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("usuario");
+};
 
 export const getPerfil = () => request("/auth/perfil");
 
