@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import fs from "fs";
+import path from "path";
 import pool from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import usuarioRoutes from "./routes/usuarioRoutes.js";
@@ -20,6 +22,14 @@ app.use("/api/prestamos", prestamoRoutes);
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
+
+const STATIC_DIR = process.env.STATIC_DIR;
+if (STATIC_DIR && fs.existsSync(STATIC_DIR)) {
+  app.use(express.static(STATIC_DIR));
+  app.get(/^\/(?!api).*/, (req, res) => {
+    res.sendFile(path.join(STATIC_DIR, "index.html"));
+  });
+}
 
 app.use((err, req, res, next) => {
   console.error("Error no controlado:", err);

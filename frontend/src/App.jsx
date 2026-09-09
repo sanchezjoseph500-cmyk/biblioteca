@@ -39,6 +39,12 @@ import {
   Menu,
   TrendingUp,
   Filter,
+  Monitor,
+  Palette,
+  ShoppingCart,
+  CalendarDays,
+  Award,
+  BookHeart,
 } from "lucide-react";
 import {
   getUsuarios,
@@ -63,11 +69,21 @@ import {
   getPerfil,
 } from "./services/api";
 import Login from "./pages/Login";
+import LandingPage from "./pages/LandingPage";
+import ClubesView from "./pages/ClubesView";
+import MiBibliotecaView from "./pages/MiBibliotecaView";
+import InsigniasView from "./pages/InsigniasView";
+import RinconCreativoView from "./pages/RinconCreativoView";
+import BibliotecaDigitalView from "./pages/BibliotecaDigitalView";
+import PagosView from "./pages/PagosView";
+import EventosView from "./pages/EventosView";
+import ComicsMangaView from "./pages/ComicsMangaView";
+import ChatbotIA from "./components/ChatbotIA";
 
 // ============ VALIDATION HELPERS ============
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const NAME_REGEX = /^[a-zA-ZáéíóúñüÁÉÍÓÚÑÜ\s'-]{2,}$/;
+const NAME_REGEX = /^[a-zA-ZáéíóúñüÁÉÍÓÚÜ\s'-]{2,}$/;
 const TITLE_REGEX = /^.{2,100}$/;
 
 function validateEmail(value) {
@@ -264,13 +280,13 @@ function ConfirmDialog({ isOpen, onClose, onConfirm, title, message, icon: Icon 
     <div className={`fixed inset-0 z-[60] overflow-y-auto transition-all duration-300 ${animating ? "opacity-100" : "opacity-0"}`}>
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
       <div className="relative min-h-full flex items-center justify-center p-4 pointer-events-none">
-        <div className={`relative bg-gradient-to-b from-[#faf8f0] to-[#f5f0e4] rounded-2xl border border-[#d4c9a8] shadow-2xl w-full max-w-sm transition-all duration-300 overflow-hidden pointer-events-auto ${animating ? "scale-100 translate-y-0" : "scale-90 translate-y-6"}`}>
+        <div className={`relative bg-gradient-to-b from-[#faf8f0] to-[#f5f0e4] rounded-2xl border border-[#C9A97E] shadow-2xl w-full max-w-sm transition-all duration-300 overflow-hidden pointer-events-auto ${animating ? "scale-100 translate-y-0" : "scale-90 translate-y-6"}`}>
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 to-red-600" />
           <div className="px-6 py-6 text-center">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-100 to-red-100 flex items-center justify-center mx-auto mb-4 shadow-inner">
               {Icon ? <Icon size={28} className="text-rose-600" /> : <ShieldAlert size={28} className="text-rose-600" />}
             </div>
-            <h3 className="font-serif text-lg text-[#1a2520] mb-2">{title}</h3>
+            <h3 className="font-serif text-lg text-[#2B2118] mb-2">{title}</h3>
             <p className="text-sm text-[#6f6a55] mb-6">{message}</p>
             <div className="flex justify-center gap-3">
               <button onClick={onClose} className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-[#e8e0cc] text-[#4a4738] hover:bg-[#ddd5be] transition-all duration-200 cursor-pointer">
@@ -309,18 +325,18 @@ function Modal({ isOpen, onClose, title, icon: Icon, children }) {
     <div className={`fixed inset-0 z-50 overflow-y-auto transition-all duration-300 ${animating ? "opacity-100" : "opacity-0"}`}>
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
       <div className="relative min-h-full flex items-center justify-center p-4 pointer-events-none">
-        <div className={`relative bg-gradient-to-b from-[#faf8f0] to-[#f5f0e4] rounded-2xl border border-[#d4c9a8] shadow-2xl w-full max-w-md transition-all duration-300 overflow-hidden pointer-events-auto ${animating ? "scale-100 translate-y-0" : "scale-90 translate-y-6"}`}>
+        <div className={`relative bg-gradient-to-b from-[#faf8f0] to-[#f5f0e4] rounded-2xl border border-[#C9A97E] shadow-2xl w-full max-w-md transition-all duration-300 overflow-hidden pointer-events-auto ${animating ? "scale-100 translate-y-0" : "scale-90 translate-y-6"}`}>
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-emerald-500 to-amber-500" />
-          <div className="relative px-6 py-5 border-b border-[#d4c9a8]/60">
+          <div className="relative px-6 py-5 border-b border-[#C9A97E]/60">
             <div className="flex items-center gap-3">
               {Icon && (
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-md shrink-0">
                   <Icon size={20} className="text-white" />
                 </div>
               )}
-              <h2 className="font-serif text-xl text-[#1a2520]">{title}</h2>
+              <h2 className="font-serif text-xl text-[#2B2118]">{title}</h2>
             </div>
-            <button onClick={onClose} className="absolute top-5 right-5 p-1.5 rounded-lg hover:bg-[#d4c9a8]/40 transition-colors text-[#6f6a55] cursor-pointer">
+            <button onClick={onClose} className="absolute top-5 right-5 p-1.5 rounded-lg hover:bg-[#C9A97E]/40 transition-colors text-[#6f6a55] cursor-pointer">
               <X size={18} />
             </button>
           </div>
@@ -358,9 +374,9 @@ function FormField({ label, icon: Icon, error, required, children }) {
 function getInputClass(hasError) {
   const base = "w-full rounded-xl px-4 py-2.5 text-sm outline-none transition-all duration-200 shadow-sm";
   if (hasError) {
-    return `${base} bg-red-50/50 border-2 border-red-300 text-[#1a2520] placeholder:text-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200`;
+    return `${base} bg-red-50/50 border-2 border-red-300 text-[#2B2118] placeholder:text-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200`;
   }
-  return `${base} bg-white/80 border border-[#d4c9a8] text-[#1a2520] placeholder:text-[#a89f81] focus:border-[#c9a24c] focus:ring-2 focus:ring-[#c9a24c]/20 focus:bg-white`;
+  return `${base} bg-white/80 border border-[#C9A97E] text-[#2B2118] placeholder:text-[#a89f81] focus:border-[#C49A55] focus:ring-2 focus:ring-[#C49A55]/20 focus:bg-white`;
 }
 
 const selectClass = getInputClass(false) + " appearance-none cursor-pointer";
@@ -437,7 +453,7 @@ function EstadoBadge({ estado }) {
 
 function SectionHeader({ eyebrow, title, subtitle, action, icon: Icon }) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 pb-5 border-b border-[#d4c9a8]/60 animate-fadeIn">
+    <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 pb-5 border-b border-[#C9A97E]/60 animate-fadeIn">
       <div className="flex items-center gap-4">
         {Icon && (
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/25 shrink-0">
@@ -446,7 +462,7 @@ function SectionHeader({ eyebrow, title, subtitle, action, icon: Icon }) {
         )}
         <div className="min-w-0">
           <p className="text-xs uppercase tracking-[0.2em] text-amber-600 mb-1 font-bold">{eyebrow}</p>
-          <h1 className="text-xl sm:text-3xl font-serif text-[#1a2520] leading-tight">{title}</h1>
+          <h1 className="text-xl sm:text-3xl font-serif text-[#2B2118] leading-tight">{title}</h1>
           {subtitle && <p className="text-sm text-[#6f6a55] mt-0.5">{subtitle}</p>}
         </div>
       </div>
@@ -478,7 +494,7 @@ function ProgressRing({ value, max, size = 100, strokeWidth = 7, color, delay = 
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-2xl font-bold text-[#1a2520]">{animatedValue}</span>
+        <span className="text-2xl font-bold text-[#2B2118]">{animatedValue}</span>
       </div>
     </div>
   );
@@ -517,7 +533,7 @@ function DonutChart({ segments, size = 180 }) {
         ))}
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-3xl font-bold text-[#1a2520]">{total}</span>
+        <span className="text-3xl font-bold text-[#2B2118]">{total}</span>
         <span className="text-[10px] uppercase tracking-widest text-[#8a8368] font-semibold">total</span>
       </div>
     </div>
@@ -589,11 +605,11 @@ function Inicio({ usuarios, libros, prestamos, navigate }) {
   const maxMonthCount = filteredMonthBooks.length > 0 ? filteredMonthBooks[0].count : 1;
 
   const activityItems = [
-    { time: "Hace 2h", icon: CheckCircle2, color: "text-emerald-500", ring: "bg-emerald-100", text: <><strong>Andrés Rojas</strong> devolvió <span className="font-semibold text-[#1a2520]">Pedro Páramo</span></> },
-    { time: "Hace 5h", icon: Clock, color: "text-amber-500", ring: "bg-amber-100", text: <><strong>Julián Pérez</strong> tomó prestado <span className="font-semibold text-[#1a2520]">Ficciones</span></> },
-    { time: "Ayer", icon: Plus, color: "text-blue-500", ring: "bg-blue-100", text: <><strong>Se agregó</strong> <span className="font-semibold text-[#1a2520]">La Casa de los Espíritus</span> al catálogo</> },
+    { time: "Hace 2h", icon: CheckCircle2, color: "text-emerald-500", ring: "bg-emerald-100", text: <><strong>Andrés Rojas</strong> devolvió <span className="font-semibold text-[#2B2118]">Pedro Páramo</span></> },
+    { time: "Hace 5h", icon: Clock, color: "text-amber-500", ring: "bg-amber-100", text: <><strong>Julián Pérez</strong> tomó prestado <span className="font-semibold text-[#2B2118]">Ficciones</span></> },
+    { time: "Ayer", icon: Plus, color: "text-blue-500", ring: "bg-blue-100", text: <><strong>Se agregó</strong> <span className="font-semibold text-[#2B2118]">La Casa de los Espíritus</span> al catálogo</> },
     { time: "Ayer", icon: User, color: "text-violet-500", ring: "bg-violet-100", text: <><strong>Paula Méndez</strong> se registró como nueva usuaria</> },
-    { time: "Hace 3d", icon: AlertTriangle, color: "text-rose-500", ring: "bg-rose-100", text: <><span className="font-semibold text-[#1a2520]">Platero y Yo</span> está vencido — Andrés Rojas</> },
+    { time: "Hace 3d", icon: AlertTriangle, color: "text-rose-500", ring: "bg-rose-100", text: <><span className="font-semibold text-[#2B2118]">Platero y Yo</span> está vencido — Andrés Rojas</> },
   ];
 
   return (
@@ -658,7 +674,7 @@ function Inicio({ usuarios, libros, prestamos, navigate }) {
         {/* LEFT — Donut + Quick Info */}
         <div className="col-span-12 lg:col-span-4 space-y-5">
           <div className="bg-white rounded-2xl border border-amber-100/60 p-6 shadow-sm animate-fadeIn" style={{ animationDelay: "400ms" }}>
-            <h3 className="font-serif text-base text-[#1a2520] mb-4">Estado de préstamos</h3>
+            <h3 className="font-serif text-base text-[#2B2118] mb-4">Estado de préstamos</h3>
             <div className="flex justify-center mb-4">
               <DonutChart segments={donutSegments} size={170} />
             </div>
@@ -667,14 +683,14 @@ function Inicio({ usuarios, libros, prestamos, navigate }) {
                 <div key={seg.label} className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full" style={{ background: seg.color }} />
                   <span className="text-xs text-[#6f6a55] font-medium">{seg.label}</span>
-                  <span className="text-xs font-bold text-[#1a2520]">{seg.value}</span>
+                  <span className="text-xs font-bold text-[#2B2118]">{seg.value}</span>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="bg-white rounded-2xl border border-amber-100/60 p-5 shadow-sm animate-fadeIn" style={{ animationDelay: "500ms" }}>
-            <h3 className="font-serif text-base text-[#1a2520] mb-4">Acciones rápidas</h3>
+            <h3 className="font-serif text-base text-[#2B2118] mb-4">Acciones rápidas</h3>
             <div className="space-y-2.5">
               {[
                 { icon: Plus, label: "Registrar préstamo", gradient: "from-emerald-500 to-green-600", tab: "prestamos" },
@@ -685,7 +701,7 @@ function Inicio({ usuarios, libros, prestamos, navigate }) {
                   <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-200`}>
                     <Icon size={16} className="text-white" />
                   </div>
-                  <span className="text-sm font-semibold text-[#1a2520] group-hover:text-[#0d7a42] transition-colors">{label}</span>
+                  <span className="text-sm font-semibold text-[#2B2118] group-hover:text-[#0d7a42] transition-colors">{label}</span>
                   <ChevronRight size={14} className="ml-auto text-[#a89f81] group-hover:text-[#0d7a42] group-hover:translate-x-0.5 transition-all duration-200" />
                 </button>
               ))}
@@ -701,7 +717,7 @@ function Inicio({ usuarios, libros, prestamos, navigate }) {
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-sm">
                   <BookCopy size={15} className="text-white" />
                 </div>
-                <h3 className="font-serif text-base text-[#1a2520]">Libros más prestados</h3>
+                <h3 className="font-serif text-base text-[#2B2118]">Libros más prestados</h3>
               </div>
               <span className="text-[10px] uppercase tracking-widest font-bold text-violet-600 bg-violet-50 px-2.5 py-1 rounded-full border border-violet-200">Top 5</span>
             </div>
@@ -716,7 +732,7 @@ function Inicio({ usuarios, libros, prestamos, navigate }) {
                       <span className={`text-sm font-black ${a.text}`}>{i + 1}</span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-[#1a2520] truncate">{titulo}</p>
+                      <p className="text-sm font-semibold text-[#2B2118] truncate">{titulo}</p>
                       <p className="text-[11px] text-[#8a8368]">{libro?.autor || "Desconocido"}</p>
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
@@ -739,7 +755,7 @@ function Inicio({ usuarios, libros, prestamos, navigate }) {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-sm">
                 <Activity size={15} className="text-white" />
               </div>
-              <h3 className="font-serif text-base text-[#1a2520]">Actividad</h3>
+              <h3 className="font-serif text-base text-[#2B2118]">Actividad</h3>
             </div>
             <div className="relative">
               <div className="absolute left-[15px] top-3 bottom-3 w-px bg-gradient-to-b from-emerald-300 via-amber-200 to-rose-200" />
@@ -771,7 +787,7 @@ function Inicio({ usuarios, libros, prestamos, navigate }) {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-red-600 flex items-center justify-center shadow-sm">
               <AlertTriangle size={15} className="text-white" />
             </div>
-            <h3 className="font-serif text-base text-[#1a2520]">Préstamos vencidos</h3>
+            <h3 className="font-serif text-base text-[#2B2118]">Préstamos vencidos</h3>
             <span className="text-[10px] font-black text-rose-600 bg-rose-100 px-2 py-0.5 rounded-full border border-rose-200">{vencidos}</span>
           </div>
         </div>
@@ -785,7 +801,7 @@ function Inicio({ usuarios, libros, prestamos, navigate }) {
                 </div>
                 <span className="text-[10px] font-mono font-bold text-rose-400">{p.id}</span>
               </div>
-              <p className="text-sm font-serif font-bold text-[#1a2520] mb-1 leading-snug line-clamp-2">{p.libro}</p>
+              <p className="text-sm font-serif font-bold text-[#2B2118] mb-1 leading-snug line-clamp-2">{p.libro}</p>
               <p className="text-[11px] text-[#8a8368] mb-3 flex items-center gap-1"><User size={10} /> {p.usuario}</p>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5 text-[10px] text-rose-500 font-semibold">
@@ -808,7 +824,7 @@ function Inicio({ usuarios, libros, prestamos, navigate }) {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center shadow-sm">
               <TrendingUp size={15} className="text-white" />
             </div>
-            <h3 className="font-serif text-base text-[#1a2520]">Más prestados del mes</h3>
+            <h3 className="font-serif text-base text-[#2B2118]">Más prestados del mes</h3>
             <span className="text-[10px] uppercase tracking-widest font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full border border-orange-200 capitalize">{monthLabel(now)}</span>
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
@@ -818,7 +834,7 @@ function Inicio({ usuarios, libros, prestamos, navigate }) {
                 value={msSearch}
                 onChange={(e) => setMsSearch(e.target.value)}
                 placeholder="Buscar por título o autor..."
-                className="w-full sm:w-56 pl-9 pr-3 py-2 rounded-xl border border-amber-200/70 bg-white text-sm text-[#1a2520] placeholder:text-[#a89f81] focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:border-emerald-300"
+                className="w-full sm:w-56 pl-9 pr-3 py-2 rounded-xl border border-amber-200/70 bg-white text-sm text-[#2B2118] placeholder:text-[#a89f81] focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:border-emerald-300"
               />
             </div>
             <div className="relative">
@@ -826,7 +842,7 @@ function Inicio({ usuarios, libros, prestamos, navigate }) {
               <select
                 value={msGenero}
                 onChange={(e) => setMsGenero(e.target.value)}
-                className="w-full sm:w-44 pl-9 pr-8 py-2 rounded-xl border border-amber-200/70 bg-white text-sm text-[#1a2520] focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:border-emerald-300 appearance-none"
+                className="w-full sm:w-44 pl-9 pr-8 py-2 rounded-xl border border-amber-200/70 bg-white text-sm text-[#2B2118] focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:border-emerald-300 appearance-none"
               >
                 <option value="todos">Todos los géneros</option>
                 {generos.map((g) => <option key={g} value={g}>{g}</option>)}
@@ -850,9 +866,9 @@ function Inicio({ usuarios, libros, prestamos, navigate }) {
                       <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black shrink-0 ${["bg-orange-100 text-orange-700", "bg-amber-100 text-amber-700", "bg-yellow-100 text-yellow-700", "bg-amber-50 text-amber-600"][i % 4]}`}>{i + 1}</span>
                       <span className="text-[10px] font-black text-orange-600 bg-orange-100 rounded-full px-2 py-0.5">{count} {count === 1 ? "préstamo" : "préstamos"}</span>
                     </div>
-                    <p className="text-sm font-serif font-bold text-[#1a2520] leading-snug line-clamp-2">{titulo}</p>
+                    <p className="text-sm font-serif font-bold text-[#2B2118] leading-snug line-clamp-2">{titulo}</p>
                     <p className="text-[11px] text-[#8a8368] mt-0.5 truncate">{libro?.autor || "Desconocido"}</p>
-                    <p className="text-[10px] uppercase tracking-wider text-[#a89f81] mt-0.5">{libro?.genero || "—"}</p>
+                    <p className="text-[10px] uppercase tracking-wider text-[#a89f81] mt-0.5">{libro?.genero || "Sin género"}</p>
                   </div>
                 </div>
                 <div className="h-2 rounded-full bg-orange-100 overflow-hidden">
@@ -864,7 +880,7 @@ function Inicio({ usuarios, libros, prestamos, navigate }) {
         ) : (
           <div className="bg-white rounded-2xl border border-amber-100/60 p-8 text-center shadow-sm">
             <BookOpen size={28} className="mx-auto text-[#a89f81] mb-2" />
-            <p className="text-sm font-semibold text-[#1a2520]">No hay préstamos este mes</p>
+            <p className="text-sm font-semibold text-[#2B2118]">No hay préstamos este mes</p>
             <p className="text-xs text-[#8a8368] mt-1">Ajusta la búsqueda o los filtros, o registra préstamos para ver la actividad del mes.</p>
           </div>
         )}
@@ -999,7 +1015,7 @@ function UsuariosView({ usuarios, refresh, addToast }) {
           </button>
         }
       />
-      <div className="relative bg-white border border-[#d4c9a8]/50 rounded-2xl overflow-hidden shadow-lg animate-fadeIn" style={{ animationDelay: "100ms" }}>
+      <div className="relative bg-white border border-[#C9A97E]/50 rounded-2xl overflow-hidden shadow-lg animate-fadeIn" style={{ animationDelay: "100ms" }}>
         <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-500 via-emerald-500 to-blue-500" />
         <div className="overflow-x-auto">
         <table className="w-full text-sm whitespace-nowrap">
@@ -1007,8 +1023,8 @@ function UsuariosView({ usuarios, refresh, addToast }) {
             <tr className="bg-gradient-to-r from-amber-100 to-yellow-50 text-amber-800 text-xs uppercase tracking-wide">
               {[{ key: "id", label: "ID", icon: Hash }, { key: "nombre", label: "Nombre", icon: User }, { key: "email", label: "Correo", icon: Mail }, { key: "rol", label: "Rol", icon: ShieldCheck }, { key: "prestamos", label: "Préstamos", icon: BookOpen }, { key: "estado", label: "Estado", icon: Eye }].map(({ key, label, icon: Icon }) => (
                 <th key={key} className="text-left font-bold px-5 py-3.5 select-none">
-                  <button onClick={() => handleSort(key)} className="flex items-center gap-1.5 hover:text-[#1a2520] transition-colors cursor-pointer">
-                    <Icon size={12} />{label}{sortField === key && <SortIcon size={12} className="text-[#c9a24c]" />}
+                  <button onClick={() => handleSort(key)} className="flex items-center gap-1.5 hover:text-[#2B2118] transition-colors cursor-pointer">
+                    <Icon size={12} />{label}{sortField === key && <SortIcon size={12} className="text-[#C49A55]" />}
                   </button>
                 </th>
               ))}
@@ -1022,7 +1038,7 @@ function UsuariosView({ usuarios, refresh, addToast }) {
                 <td className="px-5 py-3.5">
                   <div className="flex items-center gap-3">
                     <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${avatarColors[i % avatarColors.length]} flex items-center justify-center text-white text-xs font-bold shadow-sm`}>{u.nombre.split(" ").map((n) => n[0]).join("")}</div>
-                    <span className="text-[#1a2520] font-semibold">{u.nombre}</span>
+                    <span className="text-[#2B2118] font-semibold">{u.nombre}</span>
                   </div>
                 </td>
                 <td className="px-5 py-3.5 text-[#6f6a55]">{u.email}</td>
@@ -1072,24 +1088,24 @@ function UsuariosView({ usuarios, refresh, addToast }) {
                 {detalleData.nombre.split(" ").map((n) => n[0]).join("")}
               </div>
               <div>
-                <p className="font-serif text-lg text-[#1a2520] leading-tight">{detalleData.nombre}</p>
+                <p className="font-serif text-lg text-[#2B2118] leading-tight">{detalleData.nombre}</p>
                 <p className="text-xs font-mono text-amber-600 font-bold">{detalleData.id}</p>
               </div>
             </div>
-            <div className="rounded-xl bg-white/80 border border-[#d4c9a8] px-4 py-2.5">
+            <div className="rounded-xl bg-white/80 border border-[#C9A97E] px-4 py-2.5">
               <p className="text-[10px] uppercase tracking-wider text-[#8a8368] font-semibold mb-0.5">Correo</p>
-              <p className="text-sm text-[#1a2520] break-all">{detalleData.email}</p>
+              <p className="text-sm text-[#2B2118] break-all">{detalleData.email}</p>
             </div>
-            <div className="rounded-xl bg-white/80 border border-[#d4c9a8] px-4 py-2.5">
+            <div className="rounded-xl bg-white/80 border border-[#C9A97E] px-4 py-2.5">
               <p className="text-[10px] uppercase tracking-wider text-[#8a8368] font-semibold mb-0.5">Rol</p>
               <div className="mt-0.5"><RolBadge rol={detalleData.rol} /></div>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-xl bg-white/80 border border-[#d4c9a8] px-4 py-2.5">
+              <div className="rounded-xl bg-white/80 border border-[#C9A97E] px-4 py-2.5">
                 <p className="text-[10px] uppercase tracking-wider text-[#8a8368] font-semibold mb-0.5">Préstamos</p>
-                <p className="text-sm font-bold text-[#1a2520]">{detalleData.prestamos}</p>
+                <p className="text-sm font-bold text-[#2B2118]">{detalleData.prestamos}</p>
               </div>
-              <div className="rounded-xl bg-white/80 border border-[#d4c9a8] px-4 py-2.5">
+              <div className="rounded-xl bg-white/80 border border-[#C9A97E] px-4 py-2.5">
                 <p className="text-[10px] uppercase tracking-wider text-[#8a8368] font-semibold mb-0.5">Estado</p>
                 <div className="mt-0.5"><EstadoBadge estado={detalleData.estado} /></div>
               </div>
@@ -1111,7 +1127,7 @@ function LibroAbierto({ libro, color, onClose, esAdmin, esUsuarioLector, yaSolic
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
       <div className="relative min-h-full flex items-center justify-center p-4 sm:p-6 pointer-events-none">
         <div className="relative pointer-events-auto w-full max-w-3xl">
-        <button onClick={onClose} className="absolute -top-4 -right-4 z-20 w-9 h-9 rounded-full bg-white shadow-xl flex items-center justify-center text-[#1a2520] hover:bg-rose-500 hover:text-white transition-colors cursor-pointer" title="Cerrar">
+        <button onClick={onClose} className="absolute -top-4 -right-4 z-20 w-9 h-9 rounded-full bg-white shadow-xl flex items-center justify-center text-[#2B2118] hover:bg-rose-500 hover:text-white transition-colors cursor-pointer" title="Cerrar">
           <X size={18} />
         </button>
 
@@ -1120,9 +1136,9 @@ function LibroAbierto({ libro, color, onClose, esAdmin, esUsuarioLector, yaSolic
           <div className="flex items-stretch justify-center">
             {/* Página izquierda */}
             <div className="page-left flex-1 md:max-w-[380px]">
-              <div className="page-curl relative bg-[#fdfaf1] h-[300px] md:h-[420px] rounded-l-md border-y-2 border-l-2 border-[#d4c9a8] px-5 py-4 md:px-7 md:py-8 shadow-xl flex flex-col">
+              <div className="page-curl relative bg-[#fdfaf1] h-[300px] md:h-[420px] rounded-l-md border-y-2 border-l-2 border-[#C9A97E] px-5 py-4 md:px-7 md:py-8 shadow-xl flex flex-col">
                 <div className="text-center">
-                  <h3 className="font-serif text-sm md:text-xl text-[#1a2520] mb-1 leading-snug">{libro.titulo}</h3>
+                  <h3 className="font-serif text-sm md:text-xl text-[#2B2118] mb-1 leading-snug">{libro.titulo}</h3>
                   <p className="text-[11px] md:text-sm text-[#8a8368] mb-3 md:mb-5">{libro.autor}</p>
                 </div>
                 {libro.imagen_url ? (
@@ -1152,7 +1168,7 @@ function LibroAbierto({ libro, color, onClose, esAdmin, esUsuarioLector, yaSolic
 
             {/* Página derecha (sinopsis) */}
             <div className="page-right flex-1 md:max-w-[380px]">
-              <div className="page-curl relative bg-[#fdfaf1] h-[300px] md:h-[420px] rounded-r-md border-y-2 border-r-2 border-[#d4c9a8] px-5 py-4 md:px-7 md:py-8 shadow-xl flex flex-col">
+              <div className="page-curl relative bg-[#fdfaf1] h-[300px] md:h-[420px] rounded-r-md border-y-2 border-r-2 border-[#C9A97E] px-5 py-4 md:px-7 md:py-8 shadow-xl flex flex-col">
                 <div className="flex items-center justify-between mb-3 md:mb-5">
                   <span className="text-[10px] uppercase tracking-[0.2em] text-amber-700 font-black bg-amber-100 px-3 py-1 rounded-full">Sinopsis</span>
                   <span className="text-[10px] font-mono text-[#a89f81]">{libro.id}</span>
@@ -1387,13 +1403,13 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
               <Plus size={16} /> Nuevo libro
             </button>
           ) : (
-            <span className="text-xs text-[#8a8368] bg-white/70 border border-[#d4c9a8]/60 px-4 py-2 rounded-xl">Explora y solicita préstamos</span>
+            <span className="text-xs text-[#8a8368] bg-white/70 border border-[#C9A97E]/60 px-4 py-2 rounded-xl">Explora y solicita préstamos</span>
           )
         }
       />
       <div className="relative mb-8 group">
         <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-400 group-focus-within:text-amber-500 transition-colors" />
-        <input placeholder="Buscar por título, autor o género..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full bg-white border border-amber-200/60 rounded-2xl pl-11 pr-14 py-3 text-sm text-[#1a2520] placeholder:text-amber-400 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-300/15 focus:shadow-md transition-all duration-200 shadow-sm" />
+        <input placeholder="Buscar por título, autor o género..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full bg-white border border-amber-200/60 rounded-2xl pl-11 pr-14 py-3 text-sm text-[#2B2118] placeholder:text-amber-400 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-300/15 focus:shadow-md transition-all duration-200 shadow-sm" />
         {search && (
           <>
             <div className="absolute right-12 top-1/2 -translate-y-1/2 text-xs font-bold text-amber-600 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-200">{filtered.length}</div>
@@ -1404,7 +1420,7 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
       {filtered.length === 0 && search && (
         <div className="text-center py-20 animate-fadeIn">
           <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-100 to-yellow-100 flex items-center justify-center mx-auto mb-4 shadow-inner"><Search size={36} className="text-amber-400/50" /></div>
-          <p className="text-[#1a2520] text-lg font-serif">No se encontraron libros</p>
+          <p className="text-[#2B2118] text-lg font-serif">No se encontraron libros</p>
           <p className="text-[#8a8368] text-sm mt-1">Intenta con otro término de búsqueda</p>
         </div>
       )}
@@ -1412,7 +1428,7 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
       <div className="space-y-3">
         {shelves.map((shelfBooks, shelfIdx) => (
           <div key={shelfIdx} className="animate-fadeIn" style={{ animationDelay: `${shelfIdx * 100}ms` }}>
-            <div className="bg-gradient-to-b from-[#f5f0e4] to-[#efe8d8] rounded-t-xl border border-[#d4c9a8]/40 border-b-0 px-6 pt-4 pb-0 relative" style={{ minHeight: "250px" }}>
+            <div className="bg-gradient-to-b from-[#f5f0e4] to-[#efe8d8] rounded-t-xl border border-[#C9A97E]/40 border-b-0 px-6 pt-4 pb-0 relative" style={{ minHeight: "250px" }}>
               <div className="absolute top-0 left-0 right-0 h-full opacity-[0.03]" style={{ backgroundImage: "repeating-linear-gradient(90deg, #8b5e3c 0px, transparent 1px, transparent 40px)" }} />
               <div className="relative flex items-end justify-start gap-4 h-[200px] px-4">
                 {shelfBooks.map((l, i) => {
@@ -1440,7 +1456,7 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
                         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-8 h-[2px] bg-white/20 rounded-full" />
                         <div className="absolute inset-0 flex items-center justify-center px-1">
                           <div className="book-spine text-white text-[9px] font-bold leading-tight tracking-wide drop-shadow-sm text-center max-h-full overflow-hidden" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}>
-                            {l.titulo.length > 18 ? l.titulo.slice(0, 18) + "…" : l.titulo}
+                            {l.titulo.length > 18 ? l.titulo.slice(0, 18) + "\u2026" : l.titulo}
                           </div>
                         </div>
                         <div className="absolute top-1.5 right-1.5">
@@ -1533,7 +1549,7 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
           <input type="url" placeholder="https://ejemplo.com/portada.jpg" value={imagenUrl} onChange={(e) => setImagenUrl(e.target.value)} maxLength={500} className={getInputClass(false)} />
           {imagenUrl && (
             <div className="mt-2">
-              <img src={imagenUrl} alt="Vista previa" className="h-28 rounded-lg object-cover border border-[#d4c9a8] shadow-sm" onError={(e) => { e.currentTarget.style.opacity = "0.3"; }} />
+              <img src={imagenUrl} alt="Vista previa" className="h-28 rounded-lg object-cover border border-[#C9A97E] shadow-sm" onError={(e) => { e.currentTarget.style.opacity = "0.3"; }} />
             </div>
           )}
         </FormField>
@@ -1554,7 +1570,7 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
           <div className="space-y-4 animate-fadeIn">
             <div className="flex gap-4">
               {detalleData.imagen_url ? (
-                <div className="w-24 h-32 shrink-0 rounded-lg overflow-hidden border border-[#d4c9a8] shadow-md bg-white">
+                <div className="w-24 h-32 shrink-0 rounded-lg overflow-hidden border border-[#C9A97E] shadow-md bg-white">
                   <img src={detalleData.imagen_url} alt={detalleData.titulo} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                 </div>
               ) : (
@@ -1563,7 +1579,7 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
                 </div>
               )}
               <div className="min-w-0">
-                <p className="font-serif text-lg text-[#1a2520] leading-snug">{detalleData.titulo}</p>
+                <p className="font-serif text-lg text-[#2B2118] leading-snug">{detalleData.titulo}</p>
                 <p className="text-sm text-[#8a8368] mt-1 flex items-center gap-1.5"><Feather size={12} />{detalleData.autor}</p>
                 <div className="flex items-center gap-2 mt-2">
                   <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-amber-600 bg-amber-100 px-2.5 py-1 rounded-full">{detalleData.genero}</span>
@@ -1574,13 +1590,13 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
               </div>
             </div>
             {detalleData.sinopsis && (
-              <div className="rounded-xl bg-white/80 border border-[#d4c9a8] px-4 py-3">
+              <div className="rounded-xl bg-white/80 border border-[#C9A97E] px-4 py-3">
                 <p className="text-[10px] uppercase tracking-wider text-[#8a8368] font-semibold mb-1.5">Sinopsis</p>
                 <p className="text-sm text-[#4a4738] leading-relaxed">{detalleData.sinopsis}</p>
               </div>
             )}
             {esAdmin && (
-              <div className="flex justify-end gap-2 pt-2 border-t border-[#d4c9a8]/60">
+              <div className="flex justify-end gap-2 pt-2 border-t border-[#C9A97E]/60">
                 <button onClick={() => { setDetalleId(null); handleEditar(detalleData); }} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-100 text-amber-800 text-xs font-bold hover:bg-amber-200 transition-all duration-200 cursor-pointer shadow-sm">
                   <Pencil size={13} /> Editar
                 </button>
@@ -1596,7 +1612,7 @@ function LibrosView({ libros, refresh, addToast, user, misPrestamos = [] }) {
               </div>
             )}
             {esUsuarioLector && detalleData.disponible && (
-              <div className="flex justify-end pt-2 border-t border-[#d4c9a8]/60">
+              <div className="flex justify-end pt-2 border-t border-[#C9A97E]/60">
                 {yaSolicitado(detalleData.titulo) ? (
                   <span className="flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-xl bg-amber-100 text-amber-700 border border-amber-300/60">
                     <Hourglass size={13} /> Solicitud pendiente
@@ -1806,7 +1822,7 @@ function PrestamosView({ prestamos, usuarios, libros, refresh, addToast }) {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-sm">
               <Hourglass size={15} className="text-white" />
             </div>
-            <h3 className="font-serif text-base text-[#1a2520]">Solicitudes de préstamo</h3>
+            <h3 className="font-serif text-base text-[#2B2118]">Solicitudes de préstamo</h3>
             <span className="text-[10px] font-black text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-200">{solicitudesPendientes.length}</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -1819,7 +1835,7 @@ function PrestamosView({ prestamos, usuarios, libros, refresh, addToast }) {
                   </div>
                   <span className="text-[10px] font-mono font-bold text-amber-400">{s.id}</span>
                 </div>
-                <p className="text-sm font-serif font-bold text-[#1a2520] mb-1 leading-snug line-clamp-2">{s.libro}</p>
+                <p className="text-sm font-serif font-bold text-[#2B2118] mb-1 leading-snug line-clamp-2">{s.libro}</p>
                 <p className="text-[11px] text-[#8a8368] mb-4 flex items-center gap-1"><User size={10} /> {s.usuario}</p>
                 <div className="flex items-center gap-2">
                   <button onClick={() => handleAprobar(s)} className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-green-700 text-white text-xs font-bold hover:from-emerald-500 hover:to-green-600 transition-all duration-150 cursor-pointer shadow-sm active:scale-[0.97]">
@@ -1835,7 +1851,7 @@ function PrestamosView({ prestamos, usuarios, libros, refresh, addToast }) {
         </div>
       )}
 
-      <div className="relative bg-white border border-[#d4c9a8]/50 rounded-2xl overflow-hidden shadow-lg animate-fadeIn" style={{ animationDelay: "100ms" }}>
+      <div className="relative bg-white border border-[#C9A97E]/50 rounded-2xl overflow-hidden shadow-lg animate-fadeIn" style={{ animationDelay: "100ms" }}>
         <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 via-amber-500 to-emerald-500" />
         <div className="overflow-x-auto">
         <table className="w-full text-sm whitespace-nowrap">
@@ -1854,7 +1870,7 @@ function PrestamosView({ prestamos, usuarios, libros, refresh, addToast }) {
             {prestamos.map((p) => (
               <tr key={p.id} className={`border-t border-amber-200/50 transition-all duration-200 ${hoveredRow === p.id ? "bg-gradient-to-r from-amber-50 to-yellow-50" : "bg-transparent"}`} onMouseEnter={() => setHoveredRow(p.id)} onMouseLeave={() => setHoveredRow(null)}>
                 <td className="px-5 py-3.5 font-mono text-xs text-amber-600 font-bold">{p.id}</td>
-                <td className="px-5 py-3.5 text-[#1a2520] font-semibold">{p.libro}</td>
+                <td className="px-5 py-3.5 text-[#2B2118] font-semibold">{p.libro}</td>
                 <td className="px-5 py-3.5 text-[#6f6a55]">
                   <div className="flex items-center gap-2">
                     <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-100 to-yellow-100 flex items-center justify-center"><User size={12} className="text-amber-600" /></div>
@@ -1921,25 +1937,25 @@ function PrestamosView({ prestamos, usuarios, libros, refresh, addToast }) {
         ) : (
           <div className="space-y-4 animate-fadeIn">
             <div>
-              <p className="font-serif text-lg text-[#1a2520] leading-snug">{detalleData.libro}</p>
+              <p className="font-serif text-lg text-[#2B2118] leading-snug">{detalleData.libro}</p>
               <p className="text-xs font-mono text-amber-600 font-bold mt-1">{detalleData.id}</p>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-xl bg-white/80 border border-[#d4c9a8] px-4 py-2.5">
+              <div className="rounded-xl bg-white/80 border border-[#C9A97E] px-4 py-2.5">
                 <p className="text-[10px] uppercase tracking-wider text-[#8a8368] font-semibold mb-0.5">Usuario</p>
-                <p className="text-sm font-semibold text-[#1a2520]">{detalleData.usuario}</p>
+                <p className="text-sm font-semibold text-[#2B2118]">{detalleData.usuario}</p>
               </div>
-              <div className="rounded-xl bg-white/80 border border-[#d4c9a8] px-4 py-2.5">
+              <div className="rounded-xl bg-white/80 border border-[#C9A97E] px-4 py-2.5">
                 <p className="text-[10px] uppercase tracking-wider text-[#8a8368] font-semibold mb-0.5">Estado</p>
                 <div className="mt-0.5"><EstadoBadge estado={detalleData.estado} /></div>
               </div>
-              <div className="rounded-xl bg-white/80 border border-[#d4c9a8] px-4 py-2.5">
+              <div className="rounded-xl bg-white/80 border border-[#C9A97E] px-4 py-2.5">
                 <p className="text-[10px] uppercase tracking-wider text-[#8a8368] font-semibold mb-0.5">Préstamo</p>
-                <p className="text-sm text-[#1a2520]">{detalleData.prestamo}</p>
+                <p className="text-sm text-[#2B2118]">{detalleData.prestamo}</p>
               </div>
-              <div className="rounded-xl bg-white/80 border border-[#d4c9a8] px-4 py-2.5">
+              <div className="rounded-xl bg-white/80 border border-[#C9A97E] px-4 py-2.5">
                 <p className="text-[10px] uppercase tracking-wider text-[#8a8368] font-semibold mb-0.5">Vence</p>
-                <p className="text-sm text-[#1a2520]">{detalleData.vence}</p>
+                <p className="text-sm text-[#2B2118]">{detalleData.vence}</p>
               </div>
             </div>
           </div>
@@ -1966,7 +1982,7 @@ function MisPrestamosView({ misPrestamos, libros }) {
         subtitle={`${activos.length} activos · ${pendientes.length} en solicitud · ${vencidos.length} vencidos`}
         icon={BookMarked}
         action={
-          <span className="text-xs text-[#8a8368] bg-white/70 border border-[#d4c9a8]/60 px-4 py-2 rounded-xl">
+          <span className="text-xs text-[#8a8368] bg-white/70 border border-[#C9A97E]/60 px-4 py-2 rounded-xl">
             Solicita nuevos libros desde el <strong>Catálogo</strong>
           </span>
         }
@@ -1978,7 +1994,7 @@ function MisPrestamosView({ misPrestamos, libros }) {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-sm">
               <Hourglass size={15} className="text-white" />
             </div>
-            <h3 className="font-serif text-base text-[#1a2520]">En espera de aprobación</h3>
+            <h3 className="font-serif text-base text-[#2B2118]">En espera de aprobación</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {pendientes.map((s) => (
@@ -1990,7 +2006,7 @@ function MisPrestamosView({ misPrestamos, libros }) {
                   </div>
                   <EstadoBadge estado={s.estado} />
                 </div>
-                <p className="text-sm font-serif font-bold text-[#1a2520] leading-snug line-clamp-2">{s.libro}</p>
+                <p className="text-sm font-serif font-bold text-[#2B2118] leading-snug line-clamp-2">{s.libro}</p>
                 <p className="text-[11px] text-[#8a8368] mt-2">Un empleado revisará tu solicitud pronto</p>
               </div>
             ))}
@@ -1999,7 +2015,7 @@ function MisPrestamosView({ misPrestamos, libros }) {
       )}
 
       {misPrestamos.filter((p) => p.estado !== "Pendiente").length > 0 ? (
-        <div className="relative bg-white border border-[#d4c9a8]/50 rounded-2xl overflow-hidden shadow-lg animate-fadeIn">
+        <div className="relative bg-white border border-[#C9A97E]/50 rounded-2xl overflow-hidden shadow-lg animate-fadeIn">
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 via-amber-500 to-emerald-500" />
           <div className="overflow-x-auto">
           <table className="w-full text-sm whitespace-nowrap">
@@ -2015,9 +2031,9 @@ function MisPrestamosView({ misPrestamos, libros }) {
             <tbody>
               {misPrestamos.filter((p) => p.estado !== "Pendiente").map((p) => (
                 <tr key={p.id} className="border-t border-amber-200/50 hover:bg-gradient-to-r hover:from-amber-50 hover:to-yellow-50 transition-all duration-200">
-                  <td className="px-5 py-3.5 text-[#1a2520] font-semibold">{p.libro}</td>
-                  <td className="px-5 py-3.5 text-[#6f6a55]"><div className="flex items-center gap-1.5"><Calendar size={13} className="text-emerald-500/70" />{p.prestamo || "—"}</div></td>
-                  <td className="px-5 py-3.5 text-[#6f6a55]"><div className="flex items-center gap-1.5"><Calendar size={13} className="text-amber-500/70" />{p.vence || "—"}</div></td>
+                  <td className="px-5 py-3.5 text-[#2B2118] font-semibold">{p.libro}</td>
+                  <td className="px-5 py-3.5 text-[#6f6a55]"><div className="flex items-center gap-1.5"><Calendar size={13} className="text-emerald-500/70" />{p.prestamo || "Sin fecha"}</div></td>
+                  <td className="px-5 py-3.5 text-[#6f6a55]"><div className="flex items-center gap-1.5"><Calendar size={13} className="text-amber-500/70" />{p.vence || "Sin fecha"}</div></td>
                   <td className="px-5 py-3.5"><EstadoBadge estado={p.estado} /></td>
                   <td className="px-5 py-3.5">
                     {p.notificado_tardio ? (
@@ -2040,7 +2056,7 @@ function MisPrestamosView({ misPrestamos, libros }) {
             <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-100 to-yellow-100 flex items-center justify-center mx-auto mb-4 shadow-inner">
               <BookOpen size={36} className="text-amber-400/60" />
             </div>
-            <p className="text-[#1a2520] text-lg font-serif">Aún no tienes préstamos</p>
+            <p className="text-[#2B2118] text-lg font-serif">Aún no tienes préstamos</p>
             <p className="text-[#8a8368] text-sm mt-1">{disponibles.length} libros disponibles en el catálogo esperándote</p>
           </div>
         )
@@ -2053,8 +2069,16 @@ const NAV = [
   { key: "inicio", label: "Inicio", icon: Sparkles, roles: ["admin", "empleado"] },
   { key: "usuarios", label: "Usuarios", icon: Users, roles: ["admin"] },
   { key: "libros", label: "Catálogo", icon: Library, roles: ["admin", "empleado", "usuario"] },
+  { key: "comics", label: "Cómics y Manga", icon: BookMarked, roles: ["admin", "empleado", "usuario"] },
+  { key: "biblioteca-digital", label: "Biblioteca digital", icon: Monitor, roles: ["admin", "empleado", "usuario"] },
   { key: "prestamos", label: "Préstamos", icon: ArrowLeftRight, roles: ["admin", "empleado"] },
   { key: "mis-prestamos", label: "Mis préstamos", icon: BookMarked, roles: ["usuario"] },
+  { key: "clubes", label: "Clubes de lectura", icon: Users, roles: ["admin", "empleado", "usuario"] },
+  { key: "eventos", label: "Eventos", icon: CalendarDays, roles: ["admin", "empleado", "usuario"] },
+  { key: "rincon-creativo", label: "Rincón creativo", icon: Palette, roles: ["admin", "empleado", "usuario"] },
+  { key: "mi-biblioteca", label: "Mi biblioteca", icon: BookHeart, roles: ["usuario"] },
+  { key: "insignias", label: "Insignias", icon: Award, roles: ["admin", "empleado", "usuario"] },
+  { key: "pagos", label: "Pagos", icon: ShoppingCart, roles: ["admin", "empleado", "usuario"] },
 ];
 
 // ============ SIDEBAR ============
@@ -2063,35 +2087,35 @@ function Sidebar({ tab, setTab, collapsed, setCollapsed, user, onLogout, mobileO
   const items = NAV.filter((item) => item.roles.includes(user?.rol));
   const rolInfo = ROL_BADGE_STYLE[user?.rol];
   return (
-    <aside className={`shrink-0 flex flex-col transition-all duration-300 ease-in-out ${collapsed ? "w-[72px]" : "w-64"} bg-gradient-to-b from-[#0f2b1a] via-[#164a2d] to-[#0f2b1a] text-[#f7f2e7] shadow-2xl shadow-black/20 fixed lg:static z-40 inset-y-0 left-0 ${mobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}>
+    <aside className={`shrink-0 flex flex-col transition-all duration-300 ease-in-out ${collapsed ? "w-[72px]" : "w-64"} bg-gradient-to-b from-[#3A2618] via-[#4a3020] to-[#3A2618] text-[#F7F2E7] shadow-2xl shadow-black/20 fixed lg:static z-40 inset-y-0 left-0 ${mobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}>
       <div className="flex items-center gap-3 lg:hidden px-4 py-4 border-b border-white/10">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shrink-0">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C49A55] to-[#B85C38] flex items-center justify-center shrink-0">
           <BookOpen size={20} className="text-white" />
         </div>
         {!collapsed && <p className="font-serif text-lg text-white">Biblioteca</p>}
-        <button onClick={onMobileClose} className="ml-auto p-1.5 rounded-lg hover:bg-white/10 text-[#9aa69e] cursor-pointer"><X size={18} /></button>
+        <button onClick={onMobileClose} className="ml-auto p-1.5 rounded-lg hover:bg-white/10 text-[#d8c9a8] cursor-pointer"><X size={18} /></button>
       </div>
       <div className="hidden lg:flex px-4 py-6 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shrink-0 shadow-lg shadow-amber-500/25">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C49A55] to-[#B85C38] flex items-center justify-center shrink-0 shadow-lg shadow-black/25">
             <BookOpen size={20} className="text-white" />
           </div>
           {!collapsed && (
             <div className="animate-fadeIn overflow-hidden">
               <p className="font-serif text-lg leading-tight whitespace-nowrap text-white">Biblioteca</p>
-              <p className="text-[10px] text-[#8b9690] whitespace-nowrap">Sistema de gestión</p>
+              <p className="text-[10px] text-[#d8c9a8] whitespace-nowrap">Sistema de gestión</p>
             </div>
           )}
         </div>
       </div>
       <nav className="flex-1 py-4 px-2.5">
         {items.map(({ key, label, icon: Icon }) => (
-          <button key={key} onClick={() => setTab(key)} title={collapsed ? label : undefined} className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-xl transition-all duration-200 mb-1.5 cursor-pointer ${tab === key ? "bg-gradient-to-r from-amber-500/20 to-amber-400/5 text-white shadow-md shadow-amber-500/10 border border-amber-400/20" : "text-[#9aa69e] hover:bg-white/5 hover:text-white border border-transparent"}`}>
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-all duration-200 ${tab === key ? "bg-amber-500 text-white shadow-sm" : "bg-white/5"}`}>
+          <button key={key} onClick={() => setTab(key)} title={collapsed ? label : undefined} className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-xl transition-all duration-200 mb-1.5 cursor-pointer ${tab === key ? "bg-gradient-to-r from-[#B85C38]/30 to-[#C49A55]/10 text-white shadow-md shadow-black/10 border border-[#C49A55]/30" : "text-[#d8c9a8] hover:bg-white/5 hover:text-white border border-transparent"}`}>
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-all duration-200 ${tab === key ? "bg-[#B85C38] text-white shadow-sm" : "bg-white/5"}`}>
               <Icon size={16} />
             </div>
             {!collapsed && <span className="whitespace-nowrap animate-fadeIn font-medium">{label}</span>}
-            {!collapsed && tab === key && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse-dot" />}
+            {!collapsed && tab === key && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#C49A55] animate-pulse-dot" />}
           </button>
         ))}
       </nav>
@@ -2099,12 +2123,12 @@ function Sidebar({ tab, setTab, collapsed, setCollapsed, user, onLogout, mobileO
         {!collapsed && (
           <div className="rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 animate-fadeIn">
             <div className="flex items-center gap-2.5">
-              <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${rolInfo?.cls.includes("rose") ? "from-rose-500 to-red-600" : rolInfo?.cls.includes("amber") ? "from-amber-500 to-orange-600" : "from-emerald-500 to-green-600"} flex items-center justify-center shrink-0 text-white text-xs font-bold shadow-sm`}>
+              <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${rolInfo?.cls.includes("rose") ? "from-[#B85C38] to-[#6B4226]" : rolInfo?.cls.includes("amber") ? "from-[#C49A55] to-[#6B4226]" : "from-[#657153] to-[#3A2618]"} flex items-center justify-center shrink-0 text-white text-xs font-bold shadow-sm`}>
                 {user?.nombre.split(" ").map((n) => n[0]).slice(0, 2).join("")}
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-bold text-white truncate">{user?.nombre}</p>
-                <p className="flex items-center gap-1 text-[10px] text-[#9aa69e]">
+                <p className="flex items-center gap-1 text-[10px] text-[#d8c9a8]">
                   {rolInfo && <rolInfo.icon size={9} />}
                   {ROL_LABEL[user?.rol]}
                 </p>
@@ -2141,6 +2165,7 @@ export default function App() {
   const [misPrestamos, setMisPrestamos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
+  const [showLanding, setShowLanding] = useState(true);
 
   const addToast = useCallback((toast) => {
     const id = Date.now() + Math.random();
@@ -2215,6 +2240,9 @@ export default function App() {
   };
 
   if (!user || !localStorage.getItem("token")) {
+    if (showLanding) {
+      return <LandingPage onLogin={() => setShowLanding(false)} onNavigate={() => { setShowLanding(false); }} />;
+    }
     return <Login onLogin={handleLogin} />;
   }
 
@@ -2226,45 +2254,54 @@ export default function App() {
     inicio: <Inicio usuarios={usuarios} libros={libros} prestamos={prestamos} navigate={(k) => { setTab(k); setMobileOpen(false); }} />,
     usuarios: <UsuariosView usuarios={usuarios} refresh={refresh} addToast={addToast} />,
     libros: <LibrosView libros={libros} refresh={refresh} addToast={addToast} user={user} misPrestamos={misPrestamos} />,
+    comics: <ComicsMangaView user={user} addToast={addToast} />,
     prestamos: <PrestamosView prestamos={prestamos} usuarios={usuarios} libros={libros} refresh={refresh} addToast={addToast} />,
     "mis-prestamos": <MisPrestamosView misPrestamos={misPrestamos} libros={libros} />,
+    "biblioteca-digital": <BibliotecaDigitalView user={user} addToast={addToast} />,
+    clubes: <ClubesView user={user} addToast={addToast} />,
+    eventos: <EventosView user={user} addToast={addToast} />,
+    "rincon-creativo": <RinconCreativoView user={user} addToast={addToast} />,
+    "mi-biblioteca": <MiBibliotecaView user={user} libros={libros} misPrestamos={misPrestamos} addToast={addToast} />,
+    insignias: <InsigniasView user={user} />,
+    pagos: <PagosView user={user} addToast={addToast} />,
   };
 
   return (
-    <div className="min-h-screen flex bg-[#faf6eb] font-sans">
+    <div className="min-h-screen flex bg-[#F4E8D0] font-sans">
       {mobileOpen && <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 lg:hidden" onClick={() => setMobileOpen(false)} />}
       <Sidebar tab={tabActual} setTab={(k) => { setTab(k); setMobileOpen(false); }} collapsed={collapsed} setCollapsed={setCollapsed} user={user} onLogout={handleLogout} mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)} />
       <main key={tabActual} className="flex-1 px-4 sm:px-8 lg:px-10 py-6 sm:py-8 overflow-y-auto overflow-x-hidden animate-fadeIn relative">
-        <button onClick={() => setMobileOpen(true)} className="lg:hidden mb-4 inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-white border border-[#d4c9a8] text-[#1a2520] text-sm shadow-sm hover:bg-amber-50 transition-colors cursor-pointer">
+        <button onClick={() => setMobileOpen(true)} className="lg:hidden mb-4 inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-white border border-[#C9A97E] text-[#2B2118] text-sm shadow-sm hover:bg-amber-50 transition-colors cursor-pointer">
           <Menu size={18} /> <span className="font-semibold">Menú</span>
         </button>
         {loading ? (
           <div className="flex flex-col items-center justify-center py-40 gap-4 animate-fadeIn">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/25 animate-pulse">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#C49A55] to-[#B85C38] flex items-center justify-center shadow-lg shadow-[#C49A55]/25 animate-pulse">
               <BookOpen size={28} className="text-white" />
             </div>
-            <p className="text-sm text-[#8a8368]">Cargando datos desde el servidor...</p>
+            <p className="text-sm text-[#6B4226]/70">Cargando datos desde el servidor...</p>
           </div>
         ) : apiError ? (
           <div className="flex flex-col items-center justify-center py-40 gap-3 animate-fadeIn">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 flex items-center justify-center shadow-lg shadow-rose-500/25">
               <AlertTriangle size={28} className="text-white" />
             </div>
-            <p className="font-serif text-xl text-[#1a2520]">No se pudo conectar con el servidor</p>
-            <p className="text-xs text-[#8a8368] max-w-md text-center break-all">{apiError}</p>
+            <p className="font-serif text-xl text-[#2B2118]">No se pudo conectar con el servidor</p>
+            <p className="text-xs text-[#6B4226]/70 max-w-md text-center break-all">{apiError}</p>
             <p className="text-[11px] text-[#a89f81]">Verifica que el backend esté corriendo en el puerto 3001.</p>
-            <button onClick={handleRetry} className="mt-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-emerald-700 to-green-800 text-white hover:from-emerald-600 hover:to-green-700 active:scale-[0.97] transition-all duration-200 shadow-lg shadow-emerald-700/25 cursor-pointer">
+            <button onClick={handleRetry} className="mt-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-[#B85C38] to-[#a9502f] text-white hover:from-[#c96a43] hover:to-[#b85c38] active:scale-[0.97] transition-all duration-200 shadow-lg shadow-[#B85C38]/25 cursor-pointer">
               Reintentar
             </button>
           </div>
         ) : (
           views[tabActual]
         )}
-        <footer className="mt-12 pt-6 border-t border-amber-200/60 text-center text-xs text-amber-700/70">
-          Hecho por <span className="font-semibold text-amber-800">Joseph Sanchez</span>
+        <footer className="mt-12 pt-6 border-t border-[#C49A55]/40 text-center text-xs text-[#B85C38]/80">
+          Hecho por <span className="font-semibold text-[#B85C38]">Joseph Sanchez</span>
         </footer>
       </main>
       <ToastContainer toasts={toasts} onRemove={removeToast} />
+      <ChatbotIA user={user} misPrestamos={misPrestamos} libros={libros} />
     </div>
   );
 }

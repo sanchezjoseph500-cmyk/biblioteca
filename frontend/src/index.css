@@ -9,6 +9,16 @@
   --animate-scaleIn: scaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-float-slow: float-slow 6s ease-in-out infinite;
   --animate-float-medium: float-medium 4s ease-in-out infinite;
+
+  /* ===== Biblioteca moderna: paleta de identidad ===== */
+  --color-nogal: #3A2618;        /* Navbar, encabezados, estructura */
+  --color-madera: #6B4226;       /* Elementos secundarios, libros */
+  --color-pergamino: #F4E8D0;    /* Fondo principal */
+  --color-crema: #FFF8E7;        /* Cards, paneles, contenido */
+  --color-terracota: #B85C38;    /* Botones principales, CTA */
+  --color-oro: #C49A55;          /* Detalles, iconos, insignias */
+  --color-oliva: #657153;        /* Comunidad, clubes, eventos */
+  --color-nogal-oscuro: #2B2118; /* Textos */
 }
 
 @keyframes fadeIn {
@@ -96,7 +106,7 @@
 @layer base {
   * {
     scrollbar-width: thin;
-    scrollbar-color: #c9a24c40 transparent;
+    scrollbar-color: #C49A5540 transparent;
   }
 
   *::-webkit-scrollbar {
@@ -108,21 +118,21 @@
   }
 
   *::-webkit-scrollbar-thumb {
-    background-color: #c9a24c40;
+    background-color: #C49A5540;
     border-radius: 3px;
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background-color: #c9a24c80;
+    background-color: #C49A5580;
   }
 
   ::selection {
-    background-color: #c9a24c30;
-    color: #1a2520;
+    background-color: #C49A5530;
+    color: #2B2118;
   }
 
   body {
-    background-color: #f5f0e4;
+    background-color: #F4E8D0;
   }
 }
 
